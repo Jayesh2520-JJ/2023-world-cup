@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquid Crystal UI Championship Site</title>
+    <style>
+        /* --- CSS Variables & Reset --- */
+        :root {
+            --bg-color: #0a0a12;
+            --text-color: #ffffff;
+            --accent-color: #00d2ff; /* Bright cyan for liquid effect */
+            --secondary-accent: #3a7bd5; /* Deeper blue */
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --cursor-x: 50vw;
+            --cursor-y: 50vh;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            /* Added a subtle dark gradient overlay to deepen the crystal effect */
+            background-image: linear-gradient(to bottom, rgba(10,10,18, 0.8), var(--bg-color));
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden; /* Prevents scrollbars due to moving elements */
+            position: relative;
+        }
+
+        /* --- The Background Liquid Blob --- */
+        .liquid-background-blob {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 800px;
+            height: 800px;
+            /* This radial gradient creates the "blob" */
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.4) 0%, rgba(58, 123, 213, 0.15) 40%, transparent 70%);
+            border-radius: 50%;
+            /* Intense blur makes it look liquid */
+            filter: blur(90px);
+            opacity: 0.7;
+            pointer-events: none; /* Let mouse clicks pass through */
+            /* We move the center of the blob to the cursor position */
+            transform: translate(calc(var(--cursor-x) - 50%), calc(var(--cursor-y) - 50%));
+            transition: transform 1.2s cubic-bezier(0.075, 0.82, 0.165, 1); /* Very slow, smooth follow */
+            z-index: 0;
+        }
+
+        /* --- Header & Navigation Layout (CRYSTAL BAR) --- */
+        header {
+            position: relative;
+            z-index: 10; /* Ensure header is above the background blob */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 3rem;
+            /* Liquid Crystal Glass UI Styles for the main bar */
+            background: rgba(255, 255, 255, 0.01); /* Very sheer fill */
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(20px) saturate(110%); /* Strong frosted effect */
+            -webkit-backdrop-filter: blur(20px) saturate(110%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Subtle bottom edge */
+        }
+
+        /* Logo Placeholder Styling (CRYSTAL CONTAINER) */
+        .logo-container img {
+            height: 85px;
+            width: auto;
+            /* Changed from solid white to a glass container */
+            background: var(--glass-bg);
+            padding: 10px 14px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border); /* Crystal edge */
+            box-shadow: var(--glass-shadow), inset 0 0 15px rgba(255,255,255,0.02); /* Outer and inner depth */
+            backdrop-filter: blur(15px);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.2rem; /* More space between glass buttons */
+        }
+
+        /* --- The Liquid Navigation Links (CRYSTAL BUTTONS) --- */
+        .nav-link {
+            position: relative;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.9rem 1.8rem;
+            border-radius: 40px;
+            overflow: hidden;
+            display: inline-block; /* Needed for transform to work correctly */
+
+            /* Crystal Button specific styles */
+            background: var(--glass-bg); /* Sheer glass fill */
+            border: 1px solid var(--glass-border); /* Sharp reflective border */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 0 10px rgba(255,255,255,0.03); /* Depth + Inner glow */
+            backdrop-filter: blur(15px); /* Frost effect individual buttons */
+            -webkit-backdrop-filter: blur(15px);
+
+            /* Transition for both the liquid effect and the glass border hover */
+            transition: color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* The text inside the link span */
+        .nav-link span {
+            position: relative;
+            z-index: 2; /* Text must be above the liquid bubble */
+            display: inline-block;
+            transition: transform 0.2s ease-out; /* Smooth magnetic pull reset */
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3); /* Better readability on glass */
+        }
+
+        /* The "Liquid Bubble" that appears on hover */
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Made the liquid slightly more transparent so it looks like colored liquid inside glass */
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.9), rgba(58, 123, 213, 0.9));
+            border-radius: 40px;
+            z-index: 1;
+            
+            /* Start small and invisible */
+            opacity: 0;
+            transform: scale(0.5);
+            /* The "liquid bouncy" easing function */
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.5); /* Slightly bouncier */
+        }
+
+        /* Hover States */
+        .nav-link:hover {
+            color: white;
+            border-color: rgba(0, 210, 255, 0.5); /* Border highlights cyan on hover */
+            box-shadow: 0 8px 25px rgba(0, 210, 255, 0.3), inset 0 0 15px rgba(0, 210, 255, 0.1); /* Glowing shadow */
+        }
+
+        .nav-link:hover::before {
+            opacity: 1;
+            transform: scale(1); /* Expand the liquid bubble */
+        }
+
+        /* Main Content Area Content (Just for looks) */
+        main {
+            position: relative;
+            z-index: 5;
+            height: calc(100vh - 150px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 5rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 4px;
+            /* Making the main text look like frosted glass text */
+            color: rgba(255, 255, 255, 0.1);
+            background: linear-gradient(to bottom right, #ffffff, #a8c0ff 60%, rgba(255,255,255,0.2));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(0, 210, 255, 0.4));
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="liquid-background-blob"></div>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://lh3.googleusercontent.com/gg-dl/ABS2GSkyV0ozY1R6SUj-yuJzyUAIqcHHR8wKBnFf8ZDBzS_PsVt34F04jpeGIQxrzFNq_VOxAUGrrEjH5s2FEFwBWYR7kT5IR4dkt7BrBLjgcuRei3lYwcUu8cajaX3OLO4Pna7jg2w3ICCnJtx9MTB30W1_i3jxBBAIIf67zAnl546esNf9=s1024-rj" alt="ICC CWC 2023 Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="nav-link liquid-hover"><span>Home</span></a></li>
+                <li><a href="#" class="nav-link liquid-hover"><span>Matches</span></a></li>
+                <li><a href="#" class="nav-link liquid-hover"><span>Teams</span></a></li>
+                <li><a href="#" class="nav-link liquid-hover"><span>Standings</span></a></li>
+                <li><a href="#" class="nav-link liquid-hover"><span>News</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>World Championship<br>2023</h1>
+    </main>
+
+    <script>
+        // --- 1. Background Blob Movement ---
+        // We update CSS variables so the CSS can translate the blob
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            // Update CSS custom properties on the root element
+            document.documentElement.style.setProperty('--cursor-x', x + 'px');
+            document.documentElement.style.setProperty('--cursor-y', y + 'px');
+        });
+
+
+        // --- 2. Magnetic / Liquid Navigation Links ---
+        // JS text movement removed as requested.
+        // We keep the selector here if you want to add other click functionality later,
+        // otherwise the pure CSS handles the liquid hover glow now.
+        const navLinks = document.querySelectorAll('.liquid-hover');
+
+        // No event listeners for mousemove attached to links anymore.
+    </script>
+</body>
+</html>
