@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liquid Crystal CWC Archive</title>
+    <title>ICC: CWC 23 | Homepage</title>
     <style>
-        /* --- CSS Variables & Reset --- */
         :root {
             --bg-color: #0a0a12;
             --text-color: #ffffff;
             --accent-color: #00d2ff;
             --secondary-accent: #3a7bd5;
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
             --cursor-x: 50vw;
             --cursor-y: 50vh;
         }
@@ -34,7 +33,6 @@
             position: relative;
         }
 
-        /* --- The Background Liquid Blob --- */
         .liquid-background-blob {
             position: fixed;
             top: 0;
@@ -51,107 +49,92 @@
             z-index: 0;
         }
 
-        /* --- Header & Navigation Layout --- */
+        /* HEADER – only color updated */
         header {
             position: relative;
             z-index: 10;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 3rem;
-            background: rgba(255, 255, 255, 0.01);
-            box-shadow: var(--glass-shadow);
-            backdrop-filter: blur(20px) saturate(110%);
-            -webkit-backdrop-filter: blur(20px) saturate(110%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.6rem 2.2rem;
+
+            /* Color taken from your provided image */
+            background: #2E0661;
+
+            box-shadow: 0 4px 25px rgba(0, 210, 255, 0.25);
+            backdrop-filter: blur(35px) saturate(180%);
+            -webkit-backdrop-filter: blur(35px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        /* Logo Styling */
         .logo-container img {
             height: 70px;
             width: auto;
-            background: var(--glass-bg);
-            padding: 8px; 
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow), inset 0 0 15px rgba(255,255,255,0.02);
-            backdrop-filter: blur(15px);
+            background: transparent;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
             object-fit: contain;
             display: block;
+            margin: -10px 0;
         }
 
         nav ul {
             display: flex;
             list-style: none;
-            gap: 1.2rem;
+            gap: 0.9rem;
         }
 
-        /* --- BUTTON STYLES (Fixed Hover Effect) --- */
         .nav-link {
             position: relative;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
             font-weight: 600;
-            font-size: 1rem;
-            padding: 0.9rem 1.8rem;
-            border-radius: 40px;
-            overflow: hidden; /* Keeps the liquid inside the button */
+            font-size: 0.95rem;
+            padding: 0.6rem 1.4rem;
+            border-radius: 28px;
+            overflow: hidden;
             display: inline-block;
-            
-            /* Glass Base Style */
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 0 10px rgba(255,255,255,0.03);
-            backdrop-filter: blur(15px);
-            
-            /* Smooth Transition for the "Lift" and Color change */
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-top: 1px solid rgba(255, 255, 255, 0.55);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
             transition: all 0.3s ease;
         }
 
-        /* Ensures text stays on top of the liquid animation */
         .nav-link span {
             position: relative;
             z-index: 2;
-            transition: color 0.3s ease;
         }
 
-        /* The "Liquid Bubble" hidden inside */
         .nav-link::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
+            left: -100px;
+            width: 60px;
             height: 100%;
-            /* The blue gradient fill */
-            background: linear-gradient(135deg, rgba(0, 210, 255, 0.9), rgba(58, 123, 213, 0.9));
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8), transparent);
+            transform: skewX(-25deg);
             z-index: 1;
-            
-            /* Start hidden and small */
-            opacity: 0;
-            transform: scale(0.5); 
-            border-radius: 40px;
-            
-            /* Bouncy expansion effect */
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0s;
         }
 
-        /* --- HOVER STATE (The Action) --- */
         .nav-link:hover {
             color: white;
-            border-color: rgba(0, 210, 255, 0.6); /* Bright Cyan Border */
-            /* Stronger Glow + Lift Up */
-            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.4), inset 0 0 15px rgba(0, 210, 255, 0.2);
-            transform: translateY(-3px); /* Moves button up */
+            border-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
         }
 
-        /* Trigger the liquid bubble expansion */
         .nav-link:hover::before {
-            opacity: 1;
-            transform: scale(1); /* Fills the button */
+            left: 150%;
+            transition: 0.6s ease-in-out;
         }
 
-        /* Main Content */
         main {
             position: relative;
             z-index: 5;
@@ -175,7 +158,6 @@
             filter: drop-shadow(0 0 20px rgba(0, 210, 255, 0.4));
         }
 
-        /* --- Footer Styles --- */
         footer {
             position: absolute;
             bottom: 0;
@@ -184,8 +166,8 @@
             padding: 15px 0;
             text-align: center;
             z-index: 10;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
             border-top: 1px solid var(--glass-border);
             font-size: 0.9rem;
         }
@@ -209,6 +191,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="liquid-background-blob"></div>
@@ -217,13 +200,10 @@
         <div class="logo-container">
             <img src="Gemini_Generated_Image_tue3kmtue3kmtue3.jpg" alt="ICC Men's Cricket World Cup India 2023">
         </div>
-        
         <nav>
             <ul>
-                <li><a href="#" class="nav-link"><span>Home</span></a></li>
-                <li><a href="#" class="nav-link"><span>Matches</span></a></li>
-                <li><a href="#" class="nav-link"><span>Teams</span></a></li>
-                <li><a href="#" class="nav-link"><span>Standings</span></a></li>
+                <li><a href="#" class="nav-link"><span>About</span></a></li>
+                <li><a href="#" class="nav-link"><span>Overview</span></a></li>
                 <li><a href="#" class="nav-link"><span>News</span></a></li>
             </ul>
         </nav>
@@ -235,13 +215,12 @@
 
     <footer>
         <p>
-            &copy; 2026 Liquid Crystal CWC Archive. 
+            &copy; 2026 Liquid Crystal CWC Archive.
             <a href="terms.html">Terms & Conditions</a>
         </p>
     </footer>
 
     <script>
-        // --- Background Blob Movement ---
         document.addEventListener('mousemove', (e) => {
             const x = e.clientX;
             const y = e.clientY;
@@ -249,5 +228,6 @@
             document.documentElement.style.setProperty('--cursor-y', y + 'px');
         });
     </script>
+
 </body>
 </html>
