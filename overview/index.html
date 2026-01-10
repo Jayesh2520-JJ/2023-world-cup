@@ -29,7 +29,7 @@
             background-image: linear-gradient(to bottom, rgba(10,10,18, 0.8), var(--bg-color));
             color: var(--text-color);
             min-height: 100vh;
-            overflow-x: hidden; /* Allow vertical scrolling for this page */
+            overflow-x: hidden;
             position: relative;
         }
 
@@ -92,7 +92,6 @@
             transition: all 0.3s ease;
         }
         
-        /* Active State for this page */
         .nav-link.active {
             background: rgba(255, 255, 255, 0.25);
             border-color: #fff;
@@ -109,7 +108,7 @@
         main {
             position: relative;
             z-index: 5;
-            padding: 40px 10%; /* Increased padding for scrollable content */
+            padding: 40px 10%;
             display: flex;
             flex-direction: column;
             gap: 60px;
@@ -125,12 +124,12 @@
             padding-bottom: 10px;
         }
 
-        /* --- Section 1: Teams List (Linear Numbering) --- */
+        /* --- Section 1: Teams List (Updated Layout) --- */
         .teams-section ol {
             counter-reset: team-counter;
             list-style: none;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: 1fr; /* Full width for squads to be readable */
             gap: 20px;
         }
 
@@ -138,22 +137,23 @@
             position: relative;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px 15px 15px 50px;
+            padding: 20px 20px 20px 60px; /* Space for number */
             border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
             transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
+        /* Numbering */
         .teams-section li::before {
             counter-increment: team-counter;
             content: counter(team-counter);
             position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
+            left: 20px;
+            top: 20px; /* Aligned to top since cards are taller now */
             color: var(--secondary-accent);
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 800;
             opacity: 0.7;
         }
@@ -162,6 +162,21 @@
             transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.08);
             border-color: var(--accent-color);
+        }
+
+        /* Styles for Team Name and Squad Text */
+        .team-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .squad-text {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            font-weight: 400;
         }
 
         /* --- Section 2: Standings Table --- */
@@ -230,7 +245,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        /* Numbering for Matches */
         .match-card::after {
             content: attr(data-index);
             position: absolute;
@@ -316,18 +330,48 @@
     <main>
         
         <section class="teams-section">
-            <h2>Participating Teams</h2>
+            <h2>Participating Teams & Squads</h2>
             <ol>
-                <li>Afghanistan</li>
-                <li>Australia</li>
-                <li>Bangladesh</li>
-                <li>England</li>
-                <li>India</li>
-                <li>Netherlands</li>
-                <li>New Zealand</li>
-                <li>Pakistan</li>
-                <li>South Africa</li>
-                <li>Sri Lanka</li>
+                <li>
+                    <div class="team-title">India</div>
+                    <div class="squad-text">Rohit Sharma (Captain), Hardik Pandya (vice-captain), Shubman Gill, Virat Kohli, Shreyas Iyer, KL Rahul, Ravindra Jadeja, Shardul Thakur, Jasprit Bumrah, Mohammed Siraj, Kuldeep Yadav, Mohammed Shami, Axar Patel, Ishan Kishan, Suryakumar Yadav.</div>
+                </li>
+                <li>
+                    <div class="team-title">England</div>
+                    <div class="squad-text">Jos Buttler (Captain), Moeen Ali, Gus Atkinson, Jonny Bairstow, Harry Brook, Sam Curran, Liam Livingstone, Dawid Malan, Adil Rashid, Joe Root, Ben Stokes, Reece Topley, David Willey, Mark Wood, Chris Woakes.</div>
+                </li>
+                <li>
+                    <div class="team-title">Bangladesh</div>
+                    <div class="squad-text">Shakib Al Hasan, Najmul Hossain Shanto, Litton Das, Tanzid Hasan Tamim, Towhid Hridoy, Mushfiqur Rahim, Mahmudullah Riyad, Mehidy Hasan Miraz, Mahedi Hasan, Mustafizur Rahman, Taskin Ahmed, Hasan Mahmud, Shoriful Islam, Nasum Ahmed, Tanzim Hasan Sakib.</div>
+                </li>
+                <li>
+                    <div class="team-title">Australia</div>
+                    <div class="squad-text">Pat Cummins, Steve Smith, Alex Carey, Josh Inglis, Sean Abbott, Cameron Green, Josh Hazlewood, Travis Head, Marnus Labuschagne, Mitchell Marsh, Glenn Maxwell, Mitchell Starc, Marcus Stoinis, David Warner, Adam Zampa.</div>
+                </li>
+                <li>
+                    <div class="team-title">Afghanistan</div>
+                    <div class="squad-text">Hashmatullah Shahidi, Rahmanullah Gurbaz, Ibrahim Zadran, Riaz Hassan, Rahmat Shah, Najibullah Zadran, Mohammad Nabi, Ikram Alikhil, Azmatullah Omarzai, Rashid Khan, Mujeeb ur Rahman, Noor Ahmad, Fazalhaq Farooqi, Abdul Rahman, Naveen-ul-Haq.</div>
+                </li>
+                <li>
+                    <div class="team-title">Netherlands</div>
+                    <div class="squad-text">Scott Edwards, Max O'Dowd, Bas de Leede, Vikramjit Singh, Teja Nidamanuru, Paul van Meekeren, Colin Ackermann, Roelof van der Merwe, Logan van Beek, Aryan Dutt, Noah Croes, Wesley Barresi, Saqib Zulfiqar, Shariz Ahmad, Sybrand Engelbrecht.</div>
+                </li>
+                <li>
+                    <div class="team-title">New Zealand</div>
+                    <div class="squad-text">Kane Williamson, Trent Boult, Mark Chapman, Devon Conway, Lockie Ferguson, Matt Henry, Tom Latham, Daryl Mitchell, Jimmy Neesham, Glenn Phillips, Rachin Ravindra, Mitchell Santner, Ish Sodhi, Tim Southee, Will Young.</div>
+                </li>
+                <li>
+                    <div class="team-title">Pakistan</div>
+                    <div class="squad-text">Babar Azam, Shadab Khan, Fakhar Zaman, Imam-ul-Haq, Abdullah Shafique, Mohammad Rizwan, Saud Shakeel, Iftikhar Ahmed, Salman Ali Agha, Mohammad Nawaz, Usama Mir, Shaheen Shah Afridi, Haris Rauf, Mohammad Wasim Jr, Hasan Ali.</div>
+                </li>
+                <li>
+                    <div class="team-title">South Africa</div>
+                    <div class="squad-text">Temba Bavuma, Gerald Coetzee, Quinton de Kock, Reeza Hendricks, Marco Jansen, Heinrich Klaasen, Keshav Maharaj, Aiden Markram, David Miller, Lungi Ngidi, Andile Phehlukwayo, Kagiso Rabada, Tabraiz Shamsi, Rassie van der Dussen, Lizaad Williams.</div>
+                </li>
+                <li>
+                    <div class="team-title">Sri Lanka</div>
+                    <div class="squad-text">Dasun Shanaka, Kusal Mendis, Kusal Perera, Pathum Nissanka, Dimuth Karunaratne, Sadeera Samarawickrama, Charith Asalanka, Dhananjaya de Silva, Dushan Hemantha, Maheesh Theekshana, Dunith Wellalage, Kasun Rajitha, Matheesha Pathirana, Lahiru Kumara, Dilshan Madushanka.</div>
+                </li>
             </ol>
         </section>
 
