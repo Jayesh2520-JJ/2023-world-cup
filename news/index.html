@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICC: CWC 23 | News Archive</title>
+    <style>
+        :root {
+            --bg-color: #0a0a12;
+            --text-color: #ffffff;
+            --accent-color: #00d2ff;
+            --secondary-accent: #3a7bd5;
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            --cursor-x: 50vw;
+            --cursor-y: 50vh;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            background-image: linear-gradient(to bottom, rgba(10,10,18, 0.8), var(--bg-color));
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- Background Blob --- */
+        .liquid-background-blob {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.4) 0%, rgba(58, 123, 213, 0.15) 40%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.7;
+            pointer-events: none;
+            transform: translate(calc(var(--cursor-x) - 50%), calc(var(--cursor-y) - 50%));
+            transition: transform 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+            z-index: 0;
+        }
+
+        /* --- Header --- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 2.2rem;
+            background: #2E0661;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .logo-container img {
+            height: 70px;
+            width: auto;
+            display: block;
+            margin: -10px 0;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 0.9rem;
+        }
+
+        .nav-link {
+            position: relative;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.6rem 1.4rem;
+            border-radius: 28px;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        /* Active State styling */
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: #fff;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        /* --- Main Content Layout --- */
+        main {
+            position: relative;
+            z-index: 5;
+            padding: 40px 10%;
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            color: var(--accent-color);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        /* --- News Card Styles (Shared) --- */
+        .news-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 30px rgba(0, 210, 255, 0.15);
+        }
+
+        .news-meta {
+            font-size: 0.85rem;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .news-meta::before {
+            content: '';
+            display: block;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .news-card h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.3;
+            background: linear-gradient(to right, #fff, #a8c0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .news-summary {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Hero Card Specifics */
+        .hero-card {
+            padding: 40px;
+            border-color: var(--secondary-accent);
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(58, 123, 213, 0.1));
+        }
+        .hero-card h3 { font-size: 2.5rem; }
+
+        /* Grid Layout */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: 50px;
+            padding: 20px 0;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            font-size: 0.9rem;
+        }
+        
+        footer p { color: rgba(255, 255, 255, 0.5); margin: 0; }
+        footer a { color: var(--accent-color); text-decoration: none; margin-left: 10px; font-weight: 600; }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="liquid-background-blob"></div>
+
+    <header>
+        <div class="logo-container">
+            <img src="Gemini_Generated_Image_tue3kmtue3kmtue3.jpg" alt="ICC CWC 23">
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="index.html" class="nav-link"><span>Home</span></a></li>
+                <li><a href="overview.html" class="nav-link"><span>Overview</span></a></li>
+                <li><a href="#" class="nav-link active"><span>News</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        
+        <section>
+            <h2>Headline Story</h2>
+            <div class="news-card hero-card">
+                <div class="news-meta">19 Nov 2023 | The Final</div>
+                <h3>Australia Silences Ahmedabad: Head's Heroics Seal 6th World Cup Title</h3>
+                <p class="news-summary">Against the odds and a deafening home crowd of over 90,000, Pat Cummins' Australia stunned the unbeaten Indian juggernaut by 6 wickets. Travis Head played the innings of a lifetime, smashing a magnificent 137 to chase down 240 and secure Australia's record-extending sixth ODI World Cup triumph.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Tournament Defining Moments</h2>
+            <div class="news-grid">
+
+                <div class="news-card">
+                    <div class="news-meta">15 Nov 2023 | Milestone</div>
+                    <h3>The Greatest: Kohli Eclipses Tendulkar with Historic 50th Century</h3>
+                    <p class="news-summary">In the high-pressure semi-final against New Zealand at Wankhede, Virat Kohli surpassed Sachin Tendulkar's record for most ODI centuries. He bowed to the Master Blaster in the stands after reaching the milestone in a tournament where he scored a record 765 runs.</p>
+                </div>
+
+                <div class="news-card">
+                    <div class="news-meta">07 Nov 2023 | The Miracle</div>
+                    <h3>"The Greatest ODI Innings Ever Played": Maxwell's One-Legged 201*</h3>
+                    <p class="news-summary">Reeling at 91/7 against Afghanistan, Australia looked defeated. Battling severe full-body cramps and unable to run, Glenn Maxwell unleashed an astonishing assault, smashing 201 not out off 128 balls to single-handedly drag Australia into the semi-finals.</p>
+                </div>
+
+                <div class="news-card">
+                    <div class="news-meta">Tournament Review | Bowling</div>
+                    <h3>The Shami Storm: Benchwarmer to Leading Wicket-Taker</h3>
+                    <p class="news-summary">Left out of India's first four matches, Mohammed Shami's return was devastating. He finished as the tournament's leading wicket-taker with 24 scalps at an unbelievable average, including a record-breaking 7/57 in the semi-final against New Zealand.</p>
+                </div>
+
+                <div class="news-card">
+                    <div class="news-meta">06 Nov 2023 | Controversy</div>
+                    <h3>History & Fury: Angelo Mathews 'Timed Out' in Delhi Drama</h3>
+                    <p class="news-summary">In a first for international cricket, Sri Lanka's Angelo Mathews was given 'timed out' after failing to be ready to face the ball within two minutes due to a helmet strap issue against Bangladesh, sparking a massive spirit of cricket debate.</p>
+                </div>
+
+                 <div class="news-card">
+                    <div class="news-meta">Tournament Review | Underdogs</div>
+                    <h3>The Afghan Rise: Toppling Giants and Winning Hearts</h3>
+                    <p class="news-summary">Afghanistan enjoyed their best-ever World Cup campaign, securing historic victories over defending champions England, Pakistan, and Sri Lanka. Their spin attack and improved batting made them genuine contenders for a semi-final spot until the final week.</p>
+                </div>
+
+                <div class="news-card">
+                    <div class="news-meta">17 Oct 2023 | Upset</div>
+                    <h3>Dutch Courage: Netherlands Stun High-Flying South Africa</h3>
+                    <p class="news-summary">In one of the shocks of the tournament at Dharamsala, the Netherlands, led by Scott Edwards, defended a modest total to defeat the in-form South African side by 38 runs in a rain-curtailed encounter.</p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>
+            &copy; 2026 Liquid Crystal CWC Archive.
+            <a href="terms.html">Terms & Conditions</a>
+        </p>
+    </footer>
+
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            document.documentElement.style.setProperty('--cursor-x', x + 'px');
+            document.documentElement.style.setProperty('--cursor-y', y + 'px');
+        });
+    </script>
+
+</body>
+</html>
