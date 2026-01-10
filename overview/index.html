@@ -124,12 +124,12 @@
             padding-bottom: 10px;
         }
 
-        /* --- Section 1: Teams List (Updated Layout) --- */
+        /* --- Section 1: Teams List --- */
         .teams-section ol {
             counter-reset: team-counter;
             list-style: none;
             display: grid;
-            grid-template-columns: 1fr; /* Full width for squads to be readable */
+            grid-template-columns: 1fr;
             gap: 20px;
         }
 
@@ -137,7 +137,7 @@
             position: relative;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px 20px 20px 60px; /* Space for number */
+            padding: 20px 20px 20px 60px;
             border-radius: 12px;
             transition: transform 0.2s;
             display: flex;
@@ -145,13 +145,12 @@
             gap: 8px;
         }
 
-        /* Numbering */
         .teams-section li::before {
             counter-increment: team-counter;
             content: counter(team-counter);
             position: absolute;
             left: 20px;
-            top: 20px; /* Aligned to top since cards are taller now */
+            top: 20px;
             color: var(--secondary-accent);
             font-size: 1.8rem;
             font-weight: 800;
@@ -164,7 +163,6 @@
             border-color: var(--accent-color);
         }
 
-        /* Styles for Team Name and Squad Text */
         .team-title {
             font-size: 1.4rem;
             font-weight: 700;
@@ -391,16 +389,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>1</td><td>🇮🇳 India</td><td>9</td><td>9</td><td>0</td><td>+2.570</td><td>18</td></tr>
-                        <tr><td>2</td><td>🇿🇦 South Africa</td><td>9</td><td>7</td><td>2</td><td>+1.261</td><td>14</td></tr>
-                        <tr><td>3</td><td>🇦🇺 Australia</td><td>9</td><td>7</td><td>2</td><td>+0.841</td><td>14</td></tr>
-                        <tr><td>4</td><td>🇳🇿 New Zealand</td><td>9</td><td>5</td><td>4</td><td>+0.743</td><td>10</td></tr>
-                        <tr><td>5</td><td>🇵🇰 Pakistan</td><td>9</td><td>4</td><td>5</td><td>-0.199</td><td>8</td></tr>
-                        <tr><td>6</td><td>🇦🇫 Afghanistan</td><td>9</td><td>4</td><td>5</td><td>-0.336</td><td>8</td></tr>
-                        <tr><td>7</td><td>🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</td><td>9</td><td>3</td><td>6</td><td>-0.572</td><td>6</td></tr>
-                        <tr><td>8</td><td>🇧🇩 Bangladesh</td><td>9</td><td>2</td><td>7</td><td>-1.087</td><td>4</td></tr>
-                        <tr><td>9</td><td>🇱🇰 Sri Lanka</td><td>9</td><td>2</td><td>7</td><td>-1.419</td><td>4</td></tr>
-                        <tr><td>10</td><td>🇳🇱 Netherlands</td><td>9</td><td>2</td><td>7</td><td>-1.825</td><td>4</td></tr>
+                        <tr><td>1</td><td>India</td><td>9</td><td>9</td><td>0</td><td>+2.570</td><td>18</td></tr>
+                        <tr><td>2</td><td>South Africa</td><td>9</td><td>7</td><td>2</td><td>+1.261</td><td>14</td></tr>
+                        <tr><td>3</td><td>Australia</td><td>9</td><td>7</td><td>2</td><td>+0.841</td><td>14</td></tr>
+                        <tr><td>4</td><td>New Zealand</td><td>9</td><td>5</td><td>4</td><td>+0.743</td><td>10</td></tr>
+                        <tr><td>5</td><td>Pakistan</td><td>9</td><td>4</td><td>5</td><td>-0.199</td><td>8</td></tr>
+                        <tr><td>6</td><td>Afghanistan</td><td>9</td><td>4</td><td>5</td><td>-0.336</td><td>8</td></tr>
+                        <tr><td>7</td><td>England</td><td>9</td><td>3</td><td>6</td><td>-0.572</td><td>6</td></tr>
+                        <tr><td>8</td><td>Bangladesh</td><td>9</td><td>2</td><td>7</td><td>-1.087</td><td>4</td></tr>
+                        <tr><td>9</td><td>Sri Lanka</td><td>9</td><td>2</td><td>7</td><td>-1.419</td><td>4</td></tr>
+                        <tr><td>10</td><td>Netherlands</td><td>9</td><td>2</td><td>7</td><td>-1.825</td><td>4</td></tr>
                     </tbody>
                 </table>
             </div>
