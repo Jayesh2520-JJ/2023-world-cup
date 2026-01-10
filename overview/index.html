@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICC: CWC 23 | Overview</title>
+    <style>
+        :root {
+            --bg-color: #0a0a12;
+            --text-color: #ffffff;
+            --accent-color: #00d2ff;
+            --secondary-accent: #3a7bd5;
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            --cursor-x: 50vw;
+            --cursor-y: 50vh;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            background-image: linear-gradient(to bottom, rgba(10,10,18, 0.8), var(--bg-color));
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden; /* Allow vertical scrolling for this page */
+            position: relative;
+        }
+
+        /* --- Background Blob --- */
+        .liquid-background-blob {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.4) 0%, rgba(58, 123, 213, 0.15) 40%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.7;
+            pointer-events: none;
+            transform: translate(calc(var(--cursor-x) - 50%), calc(var(--cursor-y) - 50%));
+            transition: transform 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+            z-index: 0;
+        }
+
+        /* --- Header --- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 2.2rem;
+            background: #2E0661;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .logo-container img {
+            height: 70px;
+            width: auto;
+            display: block;
+            margin: -10px 0;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 0.9rem;
+        }
+
+        .nav-link {
+            position: relative;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.6rem 1.4rem;
+            border-radius: 28px;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        /* Active State for this page */
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: #fff;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        /* --- Main Content Layout --- */
+        main {
+            position: relative;
+            z-index: 5;
+            padding: 40px 10%; /* Increased padding for scrollable content */
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            color: var(--accent-color);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        /* --- Section 1: Teams List (Linear Numbering) --- */
+        .teams-section ol {
+            counter-reset: team-counter;
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .teams-section li {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 15px 15px 50px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .teams-section li::before {
+            counter-increment: team-counter;
+            content: counter(team-counter);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-accent);
+            font-size: 1.5rem;
+            font-weight: 800;
+            opacity: 0.7;
+        }
+
+        .teams-section li:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-color);
+        }
+
+        /* --- Section 2: Standings Table --- */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        thead {
+            background-color: #340c66;
+            color: white;
+        }
+
+        th {
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        th:nth-child(2) { text-align: left; }
+
+        td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        td:nth-child(2) { text-align: left; font-weight: 600; color: var(--accent-color); }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background-color: rgba(255, 255, 255, 0.05); }
+
+        /* --- Section 3: Matches (Linear List) --- */
+        .matches-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .match-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .match-card:hover {
+            transform: scale(1.01);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Numbering for Matches */
+        .match-card::after {
+            content: attr(data-index);
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+        }
+
+        .match-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+
+        .match-teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            margin: 5px 0;
+        }
+
+        .team-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 4px 0;
+        }
+
+        .team-name { font-weight: 700; }
+        .team-score { color: var(--accent-color); font-family: monospace; font-size: 1.2rem; }
+
+        .match-outcome {
+            color: #4cd137; /* Green */
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: 50px;
+            padding: 20px 0;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            font-size: 0.9rem;
+        }
+        
+        footer p { color: rgba(255, 255, 255, 0.5); margin: 0; }
+        footer a { color: var(--accent-color); text-decoration: none; margin-left: 10px; font-weight: 600; }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="liquid-background-blob"></div>
+
+    <header>
+        <div class="logo-container">
+            <img src="Gemini_Generated_Image_tue3kmtue3kmtue3.jpg" alt="ICC CWC 23">
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="index.html" class="nav-link"><span>Home</span></a></li>
+                <li><a href="#" class="nav-link active"><span>Overview</span></a></li>
+                <li><a href="#" class="nav-link"><span>News</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        
+        <section class="teams-section">
+            <h2>Participating Teams</h2>
+            <ol>
+                <li>Afghanistan</li>
+                <li>Australia</li>
+                <li>Bangladesh</li>
+                <li>England</li>
+                <li>India</li>
+                <li>Netherlands</li>
+                <li>New Zealand</li>
+                <li>Pakistan</li>
+                <li>South Africa</li>
+                <li>Sri Lanka</li>
+            </ol>
+        </section>
+
+        <section class="standings-section">
+            <h2>Tournament Standings</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>POS</th>
+                            <th>TEAM</th>
+                            <th>PLD</th>
+                            <th>WON</th>
+                            <th>LOST</th>
+                            <th>NRR</th>
+                            <th>PTS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>🇮🇳 India</td><td>9</td><td>9</td><td>0</td><td>+2.570</td><td>18</td></tr>
+                        <tr><td>2</td><td>🇿🇦 South Africa</td><td>9</td><td>7</td><td>2</td><td>+1.261</td><td>14</td></tr>
+                        <tr><td>3</td><td>🇦🇺 Australia</td><td>9</td><td>7</td><td>2</td><td>+0.841</td><td>14</td></tr>
+                        <tr><td>4</td><td>🇳🇿 New Zealand</td><td>9</td><td>5</td><td>4</td><td>+0.743</td><td>10</td></tr>
+                        <tr><td>5</td><td>🇵🇰 Pakistan</td><td>9</td><td>4</td><td>5</td><td>-0.199</td><td>8</td></tr>
+                        <tr><td>6</td><td>🇦🇫 Afghanistan</td><td>9</td><td>4</td><td>5</td><td>-0.336</td><td>8</td></tr>
+                        <tr><td>7</td><td>🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</td><td>9</td><td>3</td><td>6</td><td>-0.572</td><td>6</td></tr>
+                        <tr><td>8</td><td>🇧🇩 Bangladesh</td><td>9</td><td>2</td><td>7</td><td>-1.087</td><td>4</td></tr>
+                        <tr><td>9</td><td>🇱🇰 Sri Lanka</td><td>9</td><td>2</td><td>7</td><td>-1.419</td><td>4</td></tr>
+                        <tr><td>10</td><td>🇳🇱 Netherlands</td><td>9</td><td>2</td><td>7</td><td>-1.825</td><td>4</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="matches-section">
+            <h2>Match Results</h2>
+            <div class="matches-grid">
+
+                <div class="match-card" data-index="FINAL">
+                    <div class="match-meta">
+                        <span>19 Nov 2023 - FINAL</span>
+                        <span>Ahmedabad</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">India</span><span class="team-score">240 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">241/4 (43)</span></div>
+                    <div class="match-outcome">Australia beat India by 6 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="SF2">
+                    <div class="match-meta">
+                        <span>16 Nov 2023 - SEMI FINAL 2</span>
+                        <span>Kolkata</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">212 (49.4)</span></div>
+                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">215/7 (47.2)</span></div>
+                    <div class="match-outcome">Australia beat South Africa by 3 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="SF1">
+                    <div class="match-meta">
+                        <span>15 Nov 2023 - SEMI FINAL 1</span>
+                        <span>Mumbai</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">India</span><span class="team-score">397/4 (50)</span></div>
+                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">327 (48.5)</span></div>
+                    <div class="match-outcome">India beat New Zealand by 70 runs</div>
+                </div>
+
+                <div class="match-card" data-index="45">
+                    <div class="match-meta">
+                        <span>12 Nov 2023 - MATCH 45</span>
+                        <span>Bengaluru</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">India</span><span class="team-score">410/4 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">250 (47.5)</span></div>
+                    <div class="match-outcome">India beat Netherlands by 160 runs</div>
+                </div>
+
+                <div class="match-card" data-index="44">
+                    <div class="match-meta">
+                        <span>11 Nov 2023 - MATCH 44</span>
+                        <span>Kolkata</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">England</span><span class="team-score">337/9 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">244 (43.3)</span></div>
+                    <div class="match-outcome">England beat Pakistan by 93 runs</div>
+                </div>
+
+                <div class="match-card" data-index="43">
+                    <div class="match-meta">
+                        <span>11 Nov 2023 - MATCH 43</span>
+                        <span>Pune</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">307/2 (44.4)</span></div>
+                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">306/8 (50)</span></div>
+                    <div class="match-outcome">Australia beat Bangladesh by 8 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="42">
+                    <div class="match-meta">
+                        <span>10 Nov 2023 - MATCH 42</span>
+                        <span>Ahmedabad</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">247/5 (47.3)</span></div>
+                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">244 (50)</span></div>
+                    <div class="match-outcome">South Africa beat Afghanistan by 5 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="41">
+                    <div class="match-meta">
+                        <span>09 Nov 2023 - MATCH 41</span>
+                        <span>Bengaluru</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">172/5 (23.2)</span></div>
+                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">171 (46.4)</span></div>
+                    <div class="match-outcome">New Zealand beat Sri Lanka by 5 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="40">
+                    <div class="match-meta">
+                        <span>08 Nov 2023 - MATCH 40</span>
+                        <span>Pune</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">England</span><span class="team-score">339/9 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">179 (37.2)</span></div>
+                    <div class="match-outcome">England beat Netherlands by 160 runs</div>
+                </div>
+
+                <div class="match-card" data-index="39">
+                    <div class="match-meta">
+                        <span>07 Nov 2023 - MATCH 39</span>
+                        <span>Mumbai</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">293/7 (46.5)</span></div>
+                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">291/5 (50)</span></div>
+                    <div class="match-outcome">Australia beat Afghanistan by 3 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="38">
+                    <div class="match-meta">
+                        <span>06 Nov 2023 - MATCH 38</span>
+                        <span>Delhi</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">282/7 (41.1)</span></div>
+                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">279 (49.3)</span></div>
+                    <div class="match-outcome">Bangladesh beat Sri Lanka by 3 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="37">
+                    <div class="match-meta">
+                        <span>05 Nov 2023 - MATCH 37</span>
+                        <span>Kolkata</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">India</span><span class="team-score">326/5 (50)</span></div>
+                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">83 (27.1)</span></div>
+                    <div class="match-outcome">India beat South Africa by 243 runs</div>
+                </div>
+
+                <div class="match-card" data-index="36">
+                    <div class="match-meta">
+                        <span>04 Nov 2023 - MATCH 36</span>
+                        <span>Ahmedabad</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">England</span><span class="team-score">253 (48.1)</span></div>
+                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">286 (49.3)</span></div>
+                    <div class="match-outcome">Australia beat England by 33 runs</div>
+                </div>
+
+                <div class="match-card" data-index="35">
+                    <div class="match-meta">
+                        <span>04 Nov 2023 - MATCH 35</span>
+                        <span>Bengaluru</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">401/6 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">200/1 (25.3)</span></div>
+                    <div class="match-outcome">Pakistan beat New Zealand by 21 runs (D/L)</div>
+                </div>
+
+                <div class="match-card" data-index="34">
+                    <div class="match-meta">
+                        <span>03 Nov 2023 - MATCH 34</span>
+                        <span>Lucknow</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">179 (46.3)</span></div>
+                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">181/3 (31.3)</span></div>
+                    <div class="match-outcome">Afghanistan beat Netherlands by 7 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="33">
+                    <div class="match-meta">
+                        <span>02 Nov 2023 - MATCH 33</span>
+                        <span>Mumbai</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">India</span><span class="team-score">357/8 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">55 (19.4)</span></div>
+                    <div class="match-outcome">India beat Sri Lanka by 302 runs</div>
+                </div>
+
+                <div class="match-card" data-index="32">
+                    <div class="match-meta">
+                        <span>01 Nov 2023 - MATCH 32</span>
+                        <span>Pune</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">167 (35.3)</span></div>
+                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">357/4 (50)</span></div>
+                    <div class="match-outcome">South Africa beat New Zealand by 190 runs</div>
+                </div>
+
+                <div class="match-card" data-index="31">
+                    <div class="match-meta">
+                        <span>31 Oct 2023 - MATCH 31</span>
+                        <span>Kolkata</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">205/3 (32.3)</span></div>
+                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">204 (45.1)</span></div>
+                    <div class="match-outcome">Pakistan beat Bangladesh by 7 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="30">
+                    <div class="match-meta">
+                        <span>30 Oct 2023 - MATCH 30</span>
+                        <span>Pune</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">242/3 (45.2)</span></div>
+                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">241 (49.3)</span></div>
+                    <div class="match-outcome">Afghanistan beat Sri Lanka by 7 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="29">
+                    <div class="match-meta">
+                        <span>29 Oct 2023 - MATCH 29</span>
+                        <span>Lucknow</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">India</span><span class="team-score">229/9 (50)</span></div>
+                    <div class="team-row"><span class="team-name">England</span><span class="team-score">129 (34.5)</span></div>
+                    <div class="match-outcome">India beat England by 100 runs</div>
+                </div>
+
+                <div class="match-card" data-index="28">
+                    <div class="match-meta">
+                        <span>28 Oct 2023 - MATCH 28</span>
+                        <span>Kolkata</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">229 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">142 (42.2)</span></div>
+                    <div class="match-outcome">Netherlands beat Bangladesh by 87 runs</div>
+                </div>
+
+                <div class="match-card" data-index="27">
+                    <div class="match-meta">
+                        <span>28 Oct 2023 - MATCH 27</span>
+                        <span>Dharamsala</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">388 (49.2)</span></div>
+                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">383/9 (50)</span></div>
+                    <div class="match-outcome">Australia beat New Zealand by 5 runs</div>
+                </div>
+
+                <div class="match-card" data-index="26">
+                    <div class="match-meta">
+                        <span>27 Oct 2023 - MATCH 26</span>
+                        <span>Chennai</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">270 (46.4)</span></div>
+                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">271/9 (47.2)</span></div>
+                    <div class="match-outcome">South Africa beat Pakistan by 1 wicket</div>
+                </div>
+
+                <div class="match-card" data-index="25">
+                    <div class="match-meta">
+                        <span>26 Oct 2023 - MATCH 25</span>
+                        <span>Bengaluru</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">England</span><span class="team-score">156 (33.2)</span></div>
+                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">160/2 (25.4)</span></div>
+                    <div class="match-outcome">Sri Lanka beat England by 8 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="24">
+                    <div class="match-meta">
+                        <span>25 Oct 2023 - MATCH 24</span>
+                        <span>Delhi</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">399/8 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">90 (21)</span></div>
+                    <div class="match-outcome">Australia beat Netherlands by 309 runs</div>
+                </div>
+
+                <div class="match-card" data-index="23">
+                    <div class="match-meta">
+                        <span>24 Oct 2023 - MATCH 23</span>
+                        <span>Mumbai</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">382/5 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">233 (46.4)</span></div>
+                    <div class="match-outcome">South Africa beat Bangladesh by 149 runs</div>
+                </div>
+
+                <div class="match-card" data-index="22">
+                    <div class="match-meta">
+                        <span>23 Oct 2023 - MATCH 22</span>
+                        <span>Chennai</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">282/7 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">286/2 (49)</span></div>
+                    <div class="match-outcome">Afghanistan beat Pakistan by 8 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="21">
+                    <div class="match-meta">
+                        <span>22 Oct 2023 - MATCH 21</span>
+                        <span>Dharamsala</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">India</span><span class="team-score">274/6 (48)</span></div>
+                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">273 (50)</span></div>
+                    <div class="match-outcome">India beat New Zealand by 4 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="20">
+                    <div class="match-meta">
+                        <span>21 Oct 2023 - MATCH 20</span>
+                        <span>Mumbai</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">England</span><span class="team-score">170 (22)</span></div>
+                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">399/7 (50)</span></div>
+                    <div class="match-outcome">South Africa beat England by 229 runs</div>
+                </div>
+
+                <div class="match-card" data-index="19">
+                    <div class="match-meta">
+                        <span>21 Oct 2023 - MATCH 19</span>
+                        <span>Lucknow</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">262 (49.4)</span></div>
+                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">263/5 (48.2)</span></div>
+                    <div class="match-outcome">Sri Lanka beat Netherlands by 5 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="18">
+                    <div class="match-meta">
+                        <span>20 Oct 2023 - MATCH 18</span>
+                        <span>Bengaluru</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">367/9 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">305 (45.3)</span></div>
+                    <div class="match-outcome">Australia beat Pakistan by 62 runs</div>
+                </div>
+
+                <div class="match-card" data-index="17">
+                    <div class="match-meta">
+                        <span>19 Oct 2023 - MATCH 17</span>
+                        <span>Pune</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">India</span><span class="team-score">261/3 (41.3)</span></div>
+                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">256/8 (50)</span></div>
+                    <div class="match-outcome">India beat Bangladesh by 7 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="16">
+                    <div class="match-meta">
+                        <span>18 Oct 2023 - MATCH 16</span>
+                        <span>Chennai</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">288/6 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">139 (34.4)</span></div>
+                    <div class="match-outcome">New Zealand beat Afghanistan by 149 runs</div>
+                </div>
+
+                <div class="match-card" data-index="15">
+                    <div class="match-meta">
+                        <span>17 Oct 2023 - MATCH 15</span>
+                        <span>Dharamsala</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">207 (42.5)</span></div>
+                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">245/8 (43)</span></div>
+                    <div class="match-outcome">Netherlands beat South Africa by 38 runs</div>
+                </div>
+
+                <div class="match-card" data-index="14">
+                    <div class="match-meta">
+                        <span>16 Oct 2023 - MATCH 14</span>
+                        <span>Lucknow</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">215/5 (35.2)</span></div>
+                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">209 (43.3)</span></div>
+                    <div class="match-outcome">Australia beat Sri Lanka by 5 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="13">
+                    <div class="match-meta">
+                        <span>15 Oct 2023 - MATCH 13</span>
+                        <span>Delhi</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">England</span><span class="team-score">215 (40.3)</span></div>
+                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">284 (49.5)</span></div>
+                    <div class="match-outcome">Afghanistan beat England by 69 runs</div>
+                </div>
+
+                <div class="match-card" data-index="12">
+                    <div class="match-meta">
+                        <span>14 Oct 2023 - MATCH 12</span>
+                        <span>Ahmedabad</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">India</span><span class="team-score">192/3 (30.3)</span></div>
+                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">191 (42.5)</span></div>
+                    <div class="match-outcome">India beat Pakistan by 7 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="11">
+                    <div class="match-meta">
+                        <span>13 Oct 2023 - MATCH 11</span>
+                        <span>Chennai</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">248/2 (42.5)</span></div>
+                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">245/9 (50)</span></div>
+                    <div class="match-outcome">New Zealand beat Bangladesh by 8 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="10">
+                    <div class="match-meta">
+                        <span>12 Oct 2023 - MATCH 10</span>
+                        <span>Lucknow</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">177 (40.5)</span></div>
+                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">311/7 (50)</span></div>
+                    <div class="match-outcome">South Africa beat Australia by 134 runs</div>
+                </div>
+
+                <div class="match-card" data-index="9">
+                    <div class="match-meta">
+                        <span>11 Oct 2023 - MATCH 9</span>
+                        <span>Delhi</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">India</span><span class="team-score">273/2 (35)</span></div>
+                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">272/8 (50)</span></div>
+                    <div class="match-outcome">India beat Afghanistan by 8 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="8">
+                    <div class="match-meta">
+                        <span>10 Oct 2023 - MATCH 8</span>
+                        <span>Hyderabad</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">345/4 (48.2)</span></div>
+                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">344/9 (50)</span></div>
+                    <div class="match-outcome">Pakistan beat Sri Lanka by 6 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="7">
+                    <div class="match-meta">
+                        <span>10 Oct 2023 - MATCH 7</span>
+                        <span>Dharamsala</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">England</span><span class="team-score">364/9 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">227 (48.2)</span></div>
+                    <div class="match-outcome">England beat Bangladesh by 137 runs</div>
+                </div>
+
+                <div class="match-card" data-index="6">
+                    <div class="match-meta">
+                        <span>09 Oct 2023 - MATCH 6</span>
+                        <span>Hyderabad</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">322/7 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">223 (46.3)</span></div>
+                    <div class="match-outcome">New Zealand beat Netherlands by 99 runs</div>
+                </div>
+
+                <div class="match-card" data-index="5">
+                    <div class="match-meta">
+                        <span>08 Oct 2023 - MATCH 5</span>
+                        <span>Chennai</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">India</span><span class="team-score">201/4 (41.2)</span></div>
+                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">199 (49.3)</span></div>
+                    <div class="match-outcome">India beat Australia by 6 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="4">
+                    <div class="match-meta">
+                        <span>07 Oct 2023 - MATCH 4</span>
+                        <span>Delhi</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">428/5 (50)</span></div>
+                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">326 (44.5)</span></div>
+                    <div class="match-outcome">South Africa beat Sri Lanka by 102 runs</div>
+                </div>
+
+                <div class="match-card" data-index="3">
+                    <div class="match-meta">
+                        <span>07 Oct 2023 - MATCH 3</span>
+                        <span>Dharamsala</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">158/4 (34.4)</span></div>
+                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">156 (37.2)</span></div>
+                    <div class="match-outcome">Bangladesh beat Afghanistan by 6 wickets</div>
+                </div>
+
+                <div class="match-card" data-index="2">
+                    <div class="match-meta">
+                        <span>06 Oct 2023 - MATCH 2</span>
+                        <span>Hyderabad</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">286 (49)</span></div>
+                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">205 (41)</span></div>
+                    <div class="match-outcome">Pakistan beat Netherlands by 81 runs</div>
+                </div>
+
+                <div class="match-card" data-index="1">
+                    <div class="match-meta">
+                        <span>05 Oct 2023 - MATCH 1</span>
+                        <span>Ahmedabad</span>
+                    </div>
+                    <div class="team-row"><span class="team-name">England</span><span class="team-score">282/9 (50)</span></div>
+                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">283/1 (36.2)</span></div>
+                    <div class="match-outcome">New Zealand beat England by 9 wickets</div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>
+            &copy; 2026 Liquid Crystal CWC Archive.
+            <a href="terms.html">Terms & Conditions</a>
+        </p>
+    </footer>
+
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            document.documentElement.style.setProperty('--cursor-x', x + 'px');
+            document.documentElement.style.setProperty('--cursor-y', y + 'px');
+        });
+    </script>
+
+</body>
+</html>
