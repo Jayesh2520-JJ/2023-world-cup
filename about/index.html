@@ -44,13 +44,98 @@
             z-index: 0;
         }
 
+        /* --- HEADER NAVIGATION (Imported) --- */
+        header {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 2.2rem;
+            background: #2E0661; /* Color from reference */
+            box-shadow: 0 4px 25px rgba(0, 210, 255, 0.25);
+            backdrop-filter: blur(35px) saturate(180%);
+            -webkit-backdrop-filter: blur(35px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .logo-container img {
+            height: 70px;
+            width: auto;
+            background: transparent;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            object-fit: contain;
+            display: block;
+            margin: -10px 0;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 0.9rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            position: relative;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.6rem 1.4rem;
+            border-radius: 28px;
+            overflow: hidden;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-top: 1px solid rgba(255, 255, 255, 0.55);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link span {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100px;
+            width: 60px;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8), transparent);
+            transform: skewX(-25deg);
+            z-index: 1;
+            transition: 0s;
+        }
+
+        .nav-link:hover {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+        }
+
+        .nav-link:hover::before {
+            left: 150%;
+            transition: 0.6s ease-in-out;
+        }
+
         /* --- Content Container --- */
         .content-wrapper {
             position: relative;
             z-index: 5;
             max-width: 850px;
             margin: 0 auto;
-            padding: 100px 40px;
+            padding: 80px 40px 100px 40px; /* Adjusted top padding slightly */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -63,6 +148,7 @@
             margin-bottom: 10px;
             letter-spacing: -1px;
             text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            margin-top: 0;
         }
 
         .subtitle {
@@ -131,31 +217,29 @@
             color: #fff;
         }
 
-        /* --- Back Button --- */
-        .back-link {
-            display: inline-block;
-            margin-top: 60px;
-            color: rgba(255, 255, 255, 0.5);
-            text-decoration: none;
-            font-size: 0.9rem;
-            border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
-            transition: color 0.3s;
-        }
-        
-        .back-link:hover {
-            color: var(--accent-color);
-            border-color: var(--accent-color);
-        }
-
         @media (max-width: 600px) {
             h1 { font-size: 2.5rem; }
             .cards-container { flex-direction: column; }
+            header { flex-direction: column; gap: 1rem; }
         }
     </style>
 </head>
 <body>
 
     <div class="liquid-background-blob"></div>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://drive.google.com/file/d/1la83XNHP9Swgb17GH4RtGvoXs_WjKxFj/view?usp=sharing" alt="ICC Men's Cricket World Cup India 2023">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="https://icc2023.vercel.app/about" class="nav-link"><span>About</span></a></li>
+                <li><a href="https://icc2023.vercel.app/overview" class="nav-link"><span>Overview</span></a></li>
+                <li><a href="https://icc2023.vercel.app/news" class="nav-link"><span>News</span></a></li>
+            </ul>
+        </nav>
+    </header>
 
     <div class="content-wrapper">
         <h1>Hey there, I'm the Developer!</h1>
@@ -195,9 +279,8 @@
                 <span class="card-value">Jayesh Joshi</span>
             </a>
         </div>
-
-        <a href="index.html" class="back-link">← Go back home</a>
-    </div>
+        
+        </div>
 
     <script>
         // --- Background Blob Movement ---
