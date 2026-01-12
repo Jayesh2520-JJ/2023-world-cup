@@ -6,226 +6,371 @@
     <title>ICC: CWC 23 | Homepage</title>
     <style>
         :root {
-            --bg-color: #0a0a12;
-            --text-color: #ffffff;
-            --accent-color: #00d2ff;
-            --secondary-accent: #3a7bd5;
-            --glass-border: rgba(255, 255, 255, 0.25);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            /* Deeper, richer dark background for better contrast with light effects */
+            --bg-deep: #020204;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            
+            --blob-gradient: radial-gradient(circle, rgba(64, 196, 255, 0.6) 0%, rgba(123, 31, 162, 0.5) 40%, rgba(0,0,0,0) 70%);
+            
+            /* VisionOS Glass Variables */
+            --glass-bg: rgba(30, 30, 35, 0.5); /* Slightly lighter base for better refraction */
+            --glass-border: rgba(255, 255, 255, 0.2); /* Stronger physical border */
+            
             --cursor-x: 50vw;
             --cursor-y: 50vh;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            background-image: linear-gradient(to bottom, rgba(10,10,18, 0.8), var(--bg-color));
-            color: var(--text-color);
+            /* PREMIUM FONT STACK (Unchanged) */
+            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
             height: 100vh;
             overflow: hidden;
-            position: relative;
+            cursor: default;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
+        /* --- 1. FILM GRAIN (Unchanged) --- */
+        body::before {
+            content: "";
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+            animation: noise-shift 0.2s infinite;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* --- 2. THE LIQUID ORB (Now with true Distortion) --- */
         .liquid-background-blob {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(0, 210, 255, 0.4) 0%, rgba(58, 123, 213, 0.15) 40%, transparent 70%);
+            top: 0; left: 0;
+            width: 450px;
+            height: 450px;
+            background: var(--blob-gradient);
             border-radius: 50%;
-            filter: blur(90px);
-            opacity: 0.7;
+            opacity: 1;
             pointer-events: none;
-            transform: translate(calc(var(--cursor-x) - 50%), calc(var(--cursor-y) - 50%));
-            transition: transform 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
             z-index: 0;
+            transform: translate(calc(var(--cursor-x) - 50%), calc(var(--cursor-y) - 50%));
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), width 0.3s ease, height 0.3s ease;
+            
+            /* APPLYING LIQUID DISTORTION & BLUR */
+            filter: url(#liquidFilter) blur(60px);
+            mix-blend-mode: screen;
         }
 
-        /* HEADER – only color updated */
+        /* SVG Animation for the distortion */
+        @keyframes fractalShift {
+            0% { baseFrequency: 0.01; }
+            50% { baseFrequency: 0.02; }
+            100% { baseFrequency: 0.01; }
+        }
+
+        /* --- 3. VISIONOS HEADER (Highlights & Refraction) --- */
         header {
-            position: relative;
-            z-index: 10;
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto;
+            min-width: 500px;
+            height: 64px;
+            z-index: 100;
+            
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.6rem 2.2rem;
+            padding: 6px 8px 6px 24px;
 
-            /* Color taken from your provided image */
-            background: #2E0661;
+            /* VisionOS Frosted Glass */
+            background: var(--glass-bg);
+            backdrop-filter: blur(50px) saturate(200%);
+            -webkit-backdrop-filter: blur(50px) saturate(200%);
+            
+            border-radius: 100px;
+            border: 1px solid var(--glass-border);
+            
+            /* COMPLEX EDGE HIGHLIGHTS & REFRACTION */
+            box-shadow: 
+                0 30px 70px -10px rgba(0, 0, 0, 0.8),
+                inset 0 1.5px 0.5px rgba(255, 255, 255, 0.6),
+                inset 0 3px 10px rgba(255, 255, 255, 0.2),
+                inset 0 -2px 2px rgba(0, 0, 0, 0.5),
+                inset 4px 0 10px rgba(100, 220, 255, 0.2),
+                inset -4px 0 10px rgba(220, 100, 255, 0.2);
+            
+            animation: slideDown 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
 
-            box-shadow: 0 4px 25px rgba(0, 210, 255, 0.25);
-            backdrop-filter: blur(35px) saturate(180%);
-            -webkit-backdrop-filter: blur(35px) saturate(180%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        .logo-container {
+            display: flex;
+            align-items: center;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            
+            /* Logo fades in slightly after header */
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.5s forwards;
         }
 
         .logo-container img {
-            height: 70px;
+            height: 32px;
             width: auto;
-            background: transparent;
-            padding: 0;
-            border: none;
-            box-shadow: none;
-            backdrop-filter: none;
-            object-fit: contain;
-            display: block;
-            margin: -10px 0;
+            opacity: 0.95;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .logo-container:hover img {
+            transform: scale(1.05);
         }
 
+        /* --- THE TRACK (With Gradient Border Improvement) --- */
         nav ul {
             display: flex;
             list-style: none;
-            gap: 0.9rem;
+            gap: 4px;
+            background: rgba(0,0,0,0.3);
+            padding: 5px;
+            border-radius: 100px;
+            
+            /* IMPROVEMENT: Gradient border for lighting realism */
+            border: 1px solid transparent; 
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), linear-gradient(to bottom, rgba(255,255,255,0.15), rgba(255,255,255,0.02));
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+            
+            /* Track fades in */
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.6s forwards;
         }
 
+        /* --- PREMIUM NAV PILL LINKS --- */
         .nav-link {
-            position: relative;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--text-secondary);
+            
+            /* UPDATED FONT SIZE: Bigger text */
+            font-size: 0.95rem; 
             font-weight: 600;
-            font-size: 0.95rem;
-            padding: 0.6rem 1.4rem;
-            border-radius: 28px;
-            overflow: hidden;
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            border-top: 1px solid rgba(255, 255, 255, 0.55);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
-            transition: all 0.3s ease;
-        }
-
-        .nav-link span {
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            
+            /* UPDATED PADDING: Reduced vertical padding to keep pill height same */
+            padding: 8px 45px;
+            
+            border-radius: 100px;
+            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            
             position: relative;
-            z-index: 2;
-        }
-
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100px;
-            width: 60px;
-            height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8), transparent);
-            transform: skewX(-25deg);
             z-index: 1;
-            transition: 0s;
+            background: transparent;
+            
+            /* STAGGERED ENTRANCE ANIMATION */
+            opacity: 0;
+            animation: slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
+        
+        /* Stagger Delays for each link */
+        nav ul li:nth-child(1) .nav-link { animation-delay: 0.7s; }
+        nav ul li:nth-child(2) .nav-link { animation-delay: 0.8s; }
+        nav ul li:nth-child(3) .nav-link { animation-delay: 0.9s; }
 
+        /* --- HOVER & ACTIVE STATES --- */
         .nav-link:hover {
-            color: white;
-            border-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 
+                0 4px 12px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.5),
+                inset 0 0 0 1px rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            transform: scale(1.02);
+        }
+        
+        /* IMPROVEMENT: Tactile Click State */
+        .nav-link:active {
+            transform: scale(0.96);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .nav-link:hover::before {
-            left: 150%;
-            transition: 0.6s ease-in-out;
-        }
-
+        /* --- 4. HERO TYPOGRAPHY --- */
         main {
             position: relative;
-            z-index: 5;
-            height: calc(100vh - 150px);
+            z-index: 10;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
+            flex-direction: column;
+            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
         }
 
         h1 {
-            font-size: 5rem;
-            text-transform: uppercase;
+            font-size: clamp(4rem, 11vw, 10rem); 
             font-weight: 800;
-            letter-spacing: 4px;
-            color: rgba(255, 255, 255, 0.1);
-            background: linear-gradient(to bottom right, #ffffff, #a8c0ff 60%, rgba(255,255,255,0.2));
+            line-height: 0.88;
+            letter-spacing: -0.055em;
+            text-transform: uppercase;
+            margin: 0;
+            
+            background: linear-gradient(135deg, #ffffff 0%, #b0b0b0 50%, #ffffff 100%);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(0, 210, 255, 0.4));
+            
+            text-shadow: 
+                -3px 0 10px rgba(0, 255, 255, 0.4),
+                3px 0 10px rgba(255, 0, 255, 0.4),
+                0 30px 60px rgba(0,0,0,0.8);
+            
+            animation: 
+                shine 10s linear infinite,
+                fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+            
+            opacity: 0;
+            transform: translateY(40px);
         }
 
+        /* --- 5. FOOTER (UPDATED: Centered Glass Pill) --- */
         footer {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 15px 0;
+            bottom: 30px;
+            
+            /* Center Alignment */
+            left: 50%;
+            transform: translateX(-50%);
+            
+            width: auto;
             text-align: center;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--glass-border);
-            font-size: 0.9rem;
+            z-index: 50;
+            
+            /* Glass Pill Styling */
+            background: rgba(20, 20, 25, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 12px 30px;
+            
+            box-shadow: 
+                0 10px 20px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+
+            opacity: 0;
+            animation: fadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
         }
 
         footer p {
-            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.05em;
+            font-weight: 500;
             margin: 0;
         }
 
         footer a {
-            color: var(--accent-color);
+            color: rgba(255,255,255,0.6);
             text-decoration: none;
-            margin-left: 10px;
-            font-weight: 600;
-            transition: color 0.3s, text-shadow 0.3s;
+            margin-left: 12px;
+            transition: color 0.3s;
         }
+        footer a:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
-        footer a:hover {
-            color: #fff;
-            text-shadow: 0 0 10px var(--accent-color);
+        /* --- ANIMATIONS --- */
+        @keyframes shine { to { background-position: 200% center; } }
+        @keyframes slideDown { from { transform: translate(-50%, -100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+        @keyframes fadeUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* Hover Interaction */
+        body.hovering .liquid-background-blob {
+            width: 300px;
+            height: 300px;
+            filter: url(#liquidFilter) blur(40px);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(100, 220, 255, 0.7) 50%, transparent 80%);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header { min-width: 90%; width: 90%; padding: 4px 6px 4px 16px; top: 16px; }
+            nav ul { gap: 2px; }
+            .nav-link { padding: 8px 12px; font-size: 0.65rem; }
+            h1 { text-shadow: -2px 0 5px rgba(0,255,255,0.3), 2px 0 5px rgba(255,0,255,0.3), 0 20px 40px rgba(0,0,0,0.6); }
+            footer { width: 85%; padding: 10px 15px; }
         }
     </style>
 </head>
 
 <body>
 
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;">
+        <defs>
+            <filter id="liquidFilter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="warp">
+                    <animate attributeName="baseFrequency" values="0.015;0.025;0.015" dur="10s" repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="60" in="SourceGraphic" in2="warp" />
+            </filter>
+        </defs>
+    </svg>
+
     <div class="liquid-background-blob"></div>
 
     <header>
         <div class="logo-container">
-            <img src="https://drive.google.com/file/d/1la83XNHP9Swgb17GH4RtGvoXs_WjKxFj/view?usp=sharing" alt="ICC Men's Cricket World Cup India 2023">
+            <a href="/" class="hover-trigger">
+                <img src="https://drive.google.com/file/d/1la83XNHP9Swgb17GH4RtGvoXs_WjKxFj/view?usp=sharing" alt="ICC CWC 23">
+            </a>
         </div>
         <nav>
             <ul>
-                <li><a href="https://icc2023.vercel.app/about" class="nav-link"><span>About</span></a></li>
-                <li><a href="https://icc2023.vercel.app/overview" class="nav-link"><span>Overview</span></a></li>
-                <li><a href="https://icc2023.vercel.app/news" class="nav-link"><span>News</span></a></li>
+                <li><a href="https://icc2023.vercel.app/about" class="nav-link hover-trigger">About</a></li>
+                <li><a href="https://icc2023.vercel.app/overview" class="nav-link hover-trigger">Overview</a></li>
+                <li><a href="https://icc2023.vercel.app/news" class="nav-link hover-trigger">News</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <h1>World Championship<br>2023</h1>
+        <h1>World<br>Championship<br>2023</h1>
     </main>
 
     <footer>
         <p>
             &copy; 2023 ICC CWC Archive.
-            <a href="tos">Terms & Conditions</a>
+            <a href="tos" class="hover-trigger">Terms & Conditions</a>
         </p>
     </footer>
 
     <script>
+        // Smooth Cursor Physics
         document.addEventListener('mousemove', (e) => {
-            const x = e.clientX;
-            const y = e.clientY;
-            document.documentElement.style.setProperty('--cursor-x', x + 'px');
-            document.documentElement.style.setProperty('--cursor-y', y + 'px');
+            requestAnimationFrame(() => {
+                const x = e.clientX;
+                const y = e.clientY;
+                document.documentElement.style.setProperty('--cursor-x', x + 'px');
+                document.documentElement.style.setProperty('--cursor-y', y + 'px');
+            });
+        });
+
+        // Hover State Detection
+        const triggers = document.querySelectorAll('.hover-trigger');
+        const body = document.body;
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => body.classList.add('hovering'));
+            trigger.addEventListener('mouseleave', () => body.classList.remove('hovering'));
         });
     </script>
 
