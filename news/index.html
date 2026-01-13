@@ -200,10 +200,12 @@
         }
 
         .news-card:hover {
-            transform: translateY(-8px);
+            /* CHANGED: Increased scale to 1.05 for more "zoom", added z-index */
+            transform: translateY(-10px) scale(1.05);
             background: rgba(255, 255, 255, 0.04);
             border-color: rgba(255, 255, 255, 0.15);
             box-shadow: var(--hover-glow);
+            z-index: 2;
         }
 
         /* Accent Line on Hover */
