@@ -14,12 +14,13 @@
     --border:rgba(255,255,255,.15);
     --cursor-x:50vw;
     --cursor-y:50vh;
+    --c1: rgba(64,196,255,.6);
+    --c2: rgba(123,31,162,.5);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
 body{
     background:var(--bg);
-    /* CHANGED: Updated font-family to Outfit */
     font-family:"Outfit",-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
     color:#fff;
     height:100vh;
@@ -36,15 +37,22 @@ body{
     z-index:-3;
 }
 
-/* Liquid glow */
+/* Liquid glow - UPDATED */
 .blob{
     position:fixed;
     width:450px;
     height:450px;
-    background:radial-gradient(circle, rgba(64,196,255,.6), rgba(123,31,162,.5), transparent 70%);
+    background:radial-gradient(
+        circle, 
+        var(--c1), 
+        var(--c2), 
+        transparent 70%
+    );
     border-radius:50%;
     filter:blur(80px);
+    /* TRANSFORM follows cursor (fast), BACKGROUND morphs colors (slow/smooth) */
     transform:translate(calc(var(--cursor-x) - 50%), calc(var(--cursor-y) - 50%));
+    transition: background 2s ease; 
     pointer-events:none;
 }
 
@@ -62,8 +70,6 @@ header{
     backdrop-filter:blur(40px) saturate(180%);
     border-radius:100px;
     border:1px solid var(--border);
-    
-    /* Fluidity maintained */
     box-shadow: 0 4px 30px rgba(0,0,0,0.1);
     transition: 
         background 0.5s cubic-bezier(0.32, 0.72, 0, 1),
@@ -72,14 +78,12 @@ header{
     animation: floatHeader 6s ease-in-out infinite;
 }
 
-/* Header Hover State */
 header:hover {
     background: rgba(40, 40, 45, 0.75);
     border-color: rgba(255,255,255,0.25);
     box-shadow: 0 10px 40px rgba(0,0,0,0.4);
 }
 
-/* Floating Animation Keyframes */
 @keyframes floatHeader {
     0%, 100% { transform: translate(-50%, 0px); }
     50% { transform: translate(-50%, 6px); }
@@ -127,7 +131,7 @@ nav ul:hover {
     letter-spacing:.1em;
     text-transform:uppercase;
     border-radius:100px;
-    font-weight:600; /* Outfit 600 looks premium/bold */
+    font-weight:600;
     transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     overflow: hidden;
@@ -161,8 +165,8 @@ main{
 h1{
     font-size:clamp(4.5rem,11vw,11rem);
     line-height:.88;
-    letter-spacing:-0.03em; /* Slightly tighter tracking for Outfit */
-    font-weight:800; /* Adjusted for Outfit */
+    letter-spacing:-0.03em;
+    font-weight:800;
     text-transform:uppercase;
     background:linear-gradient(180deg,#ffffff 0%,#e6e6e6 40%,#b5b5b5 60%,#ffffff 100%);
     -webkit-background-clip:text;
@@ -231,10 +235,27 @@ footer a{
 </footer>
 
 <script>
-document.addEventListener("mousemove",e=>{
-document.documentElement.style.setProperty("--cursor-x",e.clientX+"px");
-document.documentElement.style.setProperty("--cursor-y",e.clientY+"px");
-});
+    let lastColorUpdate = 0;
+
+    document.addEventListener("mousemove", e => {
+        const root = document.documentElement.style;
+        const now = Date.now();
+        
+        // 1. Position updates INSTANTLY (no lag)
+        root.setProperty("--cursor-x", e.clientX + "px");
+        root.setProperty("--cursor-y", e.clientY + "px");
+
+        // 2. Color updates THROTTLED (runs only once every 500ms)
+        if (now - lastColorUpdate > 500) {
+            const h1 = Math.floor(Math.random() * 360);
+            const h2 = Math.floor(Math.random() * 360);
+            
+            root.setProperty("--c1", `hsla(${h1}, 90%, 60%, 0.6)`);
+            root.setProperty("--c2", `hsla(${h2}, 90%, 50%, 0.5)`);
+            
+            lastColorUpdate = now;
+        }
+    });
 </script>
 
 </body>
