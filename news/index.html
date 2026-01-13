@@ -4,15 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICC: CWC 23 | News Archive</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-color: #0a0a12;
+            /* Ultra-Premium Dark Palette */
+            --bg-color: #030304; 
+            --card-bg: rgba(20, 20, 25, 0.4);
+            --card-border: rgba(255, 255, 255, 0.06);
             --text-color: #ffffff;
+
+            /* Luxury Accents */
+            --accent-gradient: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
             --accent-color: #00d2ff;
             --secondary-accent: #3a7bd5;
-            --glass-border: rgba(255, 255, 255, 0.25);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+            /* Advanced Effects */
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            --hover-glow: 0 0 30px rgba(0, 210, 255, 0.1);
+            
             --cursor-x: 50vw;
             --cursor-y: 50vh;
         }
@@ -24,193 +37,303 @@
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            /* CHANGED TO SORA */
+            font-family: 'Sora', sans-serif;
             background-color: var(--bg-color);
-            background-image: linear-gradient(to bottom, rgba(10,10,18, 0.8), var(--bg-color));
+            background-image: 
+                radial-gradient(circle at 50% 0%, #0f1016 0%, transparent 60%),
+                linear-gradient(to bottom, #030304, #08080a);
             color: var(--text-color);
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* --- Background Blob --- */
+        /* --- Ambient Background --- */
         .liquid-background-blob {
             position: fixed;
-            top: 0;
-            left: 0;
+            top: -200px;
+            left: -200px;
             width: 800px;
             height: 800px;
-            background: radial-gradient(circle, rgba(0, 210, 255, 0.4) 0%, rgba(58, 123, 213, 0.15) 40%, transparent 70%);
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.08) 0%, rgba(58, 123, 213, 0.03) 50%, transparent 70%);
             border-radius: 50%;
-            filter: blur(90px);
-            opacity: 0.7;
+            filter: blur(100px);
+            opacity: 0.5;
             pointer-events: none;
-            transform: translate(calc(var(--cursor-x) - 50%), calc(var(--cursor-y) - 50%));
-            transition: transform 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+            transform: translate(calc(var(--cursor-x) * 0.5), calc(var(--cursor-y) * 0.5));
+            transition: transform 0.1s ease;
             z-index: 0;
         }
 
-        /* --- Header --- */
+        /* --- Header (Consistent with Overview) --- */
         header {
             position: sticky;
             top: 0;
-            z-index: 20;
+            z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.6rem 2.2rem;
-            background: #2E0661;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 1rem 5%;
+            background: rgba(3, 3, 4, 0.85);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--card-border);
+            transition: all 0.3s ease;
         }
 
         .logo-container img {
-            height: 70px;
+            height: 60px;
             width: auto;
             display: block;
-            margin: -10px 0;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.15));
+            margin: -5px 0;
         }
 
         nav ul {
             display: flex;
             list-style: none;
-            gap: 0.9rem;
+            gap: 2rem;
+            align-items: center;
         }
 
         .nav-link {
-            position: relative;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 600;
-            font-size: 0.95rem;
-            padding: 0.6rem 1.4rem;
-            border-radius: 28px;
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: all 0.4s ease;
+            background: none;
+            border: none;
+            backdrop-filter: none;
         }
         
-        /* Active State styling */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0%;
+            height: 2px;
+            background: var(--accent-gradient);
+            transition: width 0.4s ease;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .nav-link:hover { color: #fff; }
+        .nav-link:hover::after { width: 100%; }
+
         .nav-link.active {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: #fff;
             color: #fff;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(255,255,255,0.3);
         }
+        .nav-link.active::after { width: 30%; }
 
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-        }
-
-        /* --- Main Content Layout --- */
+        /* --- Main Layout --- */
         main {
             position: relative;
             z-index: 5;
-            padding: 40px 10%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 5%;
             display: flex;
             flex-direction: column;
-            gap: 50px;
+            gap: 100px;
         }
 
         h2 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 25px;
-            color: var(--accent-color);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+            color: #fff;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(to right, #fff 20%, #666 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border: none;
+            padding: 0;
         }
 
-        /* --- News Card Styles (Shared) --- */
+        h2::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background: var(--accent-color);
+            margin-top: 15px;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        /* --- Ultra Premium News Cards --- */
         .news-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 25px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 35px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            backdrop-filter: blur(15px);
+        }
+
+        /* Subtle Gradient Overlay on Card */
+        .news-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+            pointer-events: none;
         }
 
         .news-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 15px 30px rgba(0, 210, 255, 0.15);
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: var(--hover-glow);
         }
 
+        /* Accent Line on Hover */
+        .news-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--accent-gradient);
+            transition: width 0.4s ease;
+        }
+        .news-card:hover::after { width: 100%; }
+
+        /* Meta Data (Date/Category) */
         .news-meta {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: var(--accent-color);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
+            letter-spacing: 2px;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+            opacity: 0.9;
         }
 
         .news-meta::before {
             content: '';
             display: block;
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: var(--accent-color);
             border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-color);
+            box-shadow: 0 0 8px var(--accent-color);
         }
 
+        /* Headlines */
         .news-card h3 {
             font-size: 1.8rem;
             font-weight: 700;
-            line-height: 1.3;
-            background: linear-gradient(to right, #fff, #a8c0ff);
+            line-height: 1.25;
+            color: #fff;
+            margin: 0;
+            letter-spacing: -0.5px;
+            transition: color 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .news-card:hover h3 {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Summaries */
+        .news-summary {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.7;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Hero Card Special Styling --- */
+        .hero-card {
+            padding: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: radial-gradient(circle at 100% 0%, rgba(0, 210, 255, 0.05), transparent 50%),
+                        linear-gradient(180deg, rgba(30, 30, 35, 0.6) 0%, rgba(10, 10, 12, 0.8) 100%);
+        }
+        
+        .hero-card h3 { 
+            font-size: 3.5rem; 
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to bottom right, #ffffff, #a5a5a5);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
-        .news-summary {
-            font-size: 1.05rem;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.6;
+        
+        .hero-card .news-summary {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.8);
+            max-width: 800px;
+            border-left: 2px solid var(--accent-color);
+            padding-left: 20px;
         }
 
-        /* Hero Card Specifics */
-        .hero-card {
-            padding: 40px;
-            border-color: var(--secondary-accent);
-            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(58, 123, 213, 0.1));
-        }
-        .hero-card h3 { font-size: 2.5rem; }
-
-        /* Grid Layout */
+        /* --- Grid Layout --- */
         .news-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
+            gap: 40px;
         }
 
         /* --- Footer --- */
         footer {
-            margin-top: 50px;
-            padding: 20px 0;
+            margin-top: 100px;
+            padding: 50px 0;
             text-align: center;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--glass-border);
-            font-size: 0.9rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            border-top: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.3);
         }
         
-        footer p { color: rgba(255, 255, 255, 0.5); margin: 0; }
-        footer a { color: var(--accent-color); text-decoration: none; margin-left: 10px; font-weight: 600; }
+        footer a { 
+            color: var(--accent-color); 
+            text-decoration: none; 
+            margin-left: 15px; 
+            font-weight: 600; 
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        footer a:hover { 
+            color: #fff; 
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .hero-card { padding: 30px; }
+            .hero-card h3 { font-size: 2.2rem; }
+            h2 { font-size: 1.8rem; }
+            .news-grid { grid-template-columns: 1fr; }
+            main { padding: 40px 5%; gap: 60px; }
+        }
 
     </style>
 </head>
