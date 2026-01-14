@@ -14,8 +14,9 @@
     --border:rgba(255,255,255,.15);
     --cursor-x:50vw;
     --cursor-y:50vh;
+    /* CHANGED: Set both to the same single color (Cyan Blue) */
     --c1: rgba(64,196,255,.6);
-    --c2: rgba(123,31,162,.5);
+    --c2: rgba(64,196,255,.6);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -40,8 +41,9 @@ body{
 /* Liquid glow - UPDATED */
 .blob{
     position:fixed;
-    width:450px;
-    height:450px;
+    /* CHANGED: Reduced size from 450px to 220px */
+    width:220px;
+    height:220px;
     background:radial-gradient(
         circle, 
         var(--c1), 
@@ -61,6 +63,7 @@ header{
     position:fixed;
     top:24px;
     left:50%;
+    transform: translateX(-50%); /* Added transform to center it since animation is removed */
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -75,18 +78,13 @@ header{
         background 0.5s cubic-bezier(0.32, 0.72, 0, 1),
         border-color 0.5s cubic-bezier(0.32, 0.72, 0, 1),
         box-shadow 0.5s ease;
-    animation: floatHeader 6s ease-in-out infinite;
+    /* REMOVED FLOAT ANIMATION */
 }
 
 header:hover {
     background: rgba(40, 40, 45, 0.75);
     border-color: rgba(255,255,255,0.25);
     box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-}
-
-@keyframes floatHeader {
-    0%, 100% { transform: translate(-50%, 0px); }
-    50% { transform: translate(-50%, 6px); }
 }
 
 /* Logo */
@@ -113,9 +111,10 @@ header:hover {
 nav ul{
     list-style:none;
     display:flex;
+    align-items: center; /* Ensures items are vertically centered */
     gap:6px;
     background:rgba(0,0,0,.4);
-    padding:6px;
+    padding:5px; /* Adjusted padding for uniformity */
     border-radius:100px;
     transition: background 0.4s ease;
 }
@@ -124,7 +123,8 @@ nav ul:hover {
 }
 
 .nav{
-    padding:8px 26px;
+    display: block; /* Ensures padding calculates correctly as a block */
+    padding:10px 24px; /* Adjusted to make spacing uniform around the text */
     color:rgba(255,255,255,.6);
     text-decoration:none;
     font-size:.8rem;
@@ -135,17 +135,18 @@ nav ul:hover {
     transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     overflow: hidden;
+    line-height: 1; /* Fixes vertical alignment issues */
 }
 
 .nav:hover{
     background:rgba(255,255,255,.2);
     color:#fff;
-    transform: scale(1.05);
+    transform: scale(1); /* Removed scale to prevent blurry border effect */
     box-shadow: 0 0 15px rgba(255,255,255,0.1);
 }
 
 .nav:active {
-    transform: scale(0.95);
+    transform: scale(0.96);
 }
 
 /* Hero */
@@ -235,26 +236,14 @@ footer a{
 </footer>
 
 <script>
-    let lastColorUpdate = 0;
-
     document.addEventListener("mousemove", e => {
         const root = document.documentElement.style;
-        const now = Date.now();
         
         // 1. Position updates INSTANTLY (no lag)
         root.setProperty("--cursor-x", e.clientX + "px");
         root.setProperty("--cursor-y", e.clientY + "px");
 
-        // 2. Color updates THROTTLED (runs only once every 500ms)
-        if (now - lastColorUpdate > 500) {
-            const h1 = Math.floor(Math.random() * 360);
-            const h2 = Math.floor(Math.random() * 360);
-            
-            root.setProperty("--c1", `hsla(${h1}, 90%, 60%, 0.6)`);
-            root.setProperty("--c2", `hsla(${h2}, 90%, 50%, 0.5)`);
-            
-            lastColorUpdate = now;
-        }
+        // CHANGED: Removed the color update logic to keep a single static color.
     });
 </script>
 
