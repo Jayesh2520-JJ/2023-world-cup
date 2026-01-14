@@ -26,7 +26,7 @@
             --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
             --glow-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
             
-            /* Variables for the Top Panel (Imported from Code 1) */
+            /* Variables for the Top Panel */
             --glass: rgba(30,30,35,.55);
             --border: rgba(255,255,255,.15);
             
@@ -69,7 +69,7 @@
             z-index: 0;
         }
 
-        /* --- NEW HEADER (From Code 1) --- */
+        /* --- HEADER --- */
         header {
             position: fixed;
             top: 24px;
@@ -166,7 +166,6 @@
             z-index: 5;
             max-width: 1400px;
             margin: 0 auto;
-            /* Increased top padding to account for floating header */
             padding: 120px 5% 60px 5%;
             display: flex;
             flex-direction: column;
@@ -199,7 +198,7 @@
             border-radius: 2px;
         }
 
-        /* --- Section 1: Teams List (Glass Cards) --- */
+        /* --- Section 1: Teams List --- */
         .teams-section ol {
             counter-reset: team-counter;
             list-style: none;
@@ -239,10 +238,8 @@
         }
 
         .teams-section li:hover {
-            /* Increased translate and scale for a more pronounced pop */
             transform: translateY(-10px) scale(1.08); 
             border-color: rgba(255, 255, 255, 0.3);
-            /* Stronger shadow for greater depth */
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 210, 255, 0.3);
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 100%);
             z-index: 2;
@@ -310,7 +307,6 @@
             font-size: 1.05rem;
         }
         
-        /* Highlight Top 4 */
         tbody tr:nth-child(-n+4) td:nth-child(1) {
             color: var(--accent-color);
             font-weight: 700;
@@ -323,41 +319,78 @@
             background-color: rgba(255, 255, 255, 0.04); 
         }
 
-        /* --- Section 3: Matches (List) --- */
+        /* --- Section 3: Matches (3D Flip Effect) --- */
         .matches-grid {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px; /* Slight increase for 3D space */
         }
 
+        /* The Flip Container */
         .match-card {
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-            border: 1px solid var(--card-border);
-            border-left: 4px solid transparent; /* Prepare for hover effect */
+            background-color: transparent;
+            width: 100%;
+            height: 180px; /* Fixed height for consistent flip */
+            perspective: 1000px; /* Essential for 3D effect */
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* The Inner Wrapper - Performs the Rotation */
+        .match-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: left;
+            /* Changed to 1.4s for slower speed and ease-in-out for smoothness */
+            transition: transform 1.4s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            border-radius: 12px;
+        }
+
+        /* Trigger Flip on Hover */
+        .match-card:hover .match-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* Additional Hover Lift on the container */
+        .match-card:hover {
+            z-index: 10;
+        }
+
+        /* Common Styling for Front and Back Faces */
+        .match-card-front, .match-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
             border-radius: 12px;
             padding: 20px 30px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            position: relative;
+            justify-content: center;
             overflow: hidden;
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        .match-card:hover {
-            /* Changed to match teams-section hover effect */
-            transform: translateY(-10px) scale(1.08);
-            border-color: rgba(255, 255, 255, 0.3);
-            /* Stronger shadow from teams section */
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 210, 255, 0.3);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 100%);
-            z-index: 2;
-            
-            /* Maintaining match-card specific border color logic */
+        /* --- Front Face Styling --- */
+        .match-card-front {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid var(--card-border);
+            border-left: 4px solid transparent; 
+            gap: 12px;
+        }
+
+        /* Hover Effect applied to Front Face specific border */
+        .match-card:hover .match-card-front {
             border-left-color: var(--accent-color);
+            border-color: rgba(255, 255, 255, 0.3);
+            /* Background sheen handled by the inner structure */
         }
 
-        .match-card::after {
+        .match-card-front::after {
             content: attr(data-index);
             position: absolute;
             top: 50%;
@@ -370,6 +403,43 @@
             font-style: italic;
         }
 
+        /* --- Back Face Styling (Summary) --- */
+        .match-card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, rgba(20, 20, 25, 0.95) 0%, rgba(5, 5, 10, 0.98) 100%);
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+        }
+
+        .summary-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+        }
+
+        .motm-text {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+        }
+
+        .motm-name {
+            color: var(--accent-color);
+            display: block;
+            font-size: 1.2rem;
+            margin-top: 4px;
+        }
+
+        /* Match Content Styling (Front) */
         .match-meta {
             display: flex;
             justify-content: space-between;
@@ -451,7 +521,8 @@
             .teams-section ol { grid-template-columns: 1fr; }
             h2 { font-size: 1.5rem; }
             main { padding: 100px 4% 40px 4%; }
-            .match-card::after { font-size: 3rem; }
+            .match-card-front::after { font-size: 3rem; }
+            .match-card { height: 220px; } /* Increase height on mobile for text wrapping */
         }
 
     </style>
@@ -557,484 +628,868 @@
             <h2>Match Results</h2>
             <div class="matches-grid">
 
-                <div class="match-card" data-index="FINAL">
-                    <div class="match-meta">
-                        <span>19 Nov 2023 - FINAL</span>
-                        <span>Ahmedabad</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="FINAL">
+                            <div class="match-meta">
+                                <span>19 Nov 2023 - FINAL</span>
+                                <span>Ahmedabad</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">India</span><span class="team-score">240 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Australia</span><span class="team-score">241/4 (43)</span></div>
+                            <div class="match-outcome">Australia beat India by 6 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Australia absorbed early pressure before Travis Head’s masterclass guided a composed chase, sealing their sixth World Cup title.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Travis Head</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">India</span><span class="team-score">240 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">241/4 (43)</span></div>
-                    <div class="match-outcome">Australia beat India by 6 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="SF2">
-                    <div class="match-meta">
-                        <span>16 Nov 2023 - SEMI FINAL 2</span>
-                        <span>Kolkata</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="SF2">
+                            <div class="match-meta">
+                                <span>16 Nov 2023 - SEMI FINAL 2</span>
+                                <span>Kolkata</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">212 (49.4)</span></div>
+                            <div class="team-row"><span class="team-name">Australia</span><span class="team-score">215/7 (47.2)</span></div>
+                            <div class="match-outcome">Australia beat South Africa by 3 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Australia held their nerve in a tense chase, surviving pressure moments to reach the final.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Pat Cummins</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">212 (49.4)</span></div>
-                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">215/7 (47.2)</span></div>
-                    <div class="match-outcome">Australia beat South Africa by 3 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="SF1">
-                    <div class="match-meta">
-                        <span>15 Nov 2023 - SEMI FINAL 1</span>
-                        <span>Mumbai</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="SF1">
+                            <div class="match-meta">
+                                <span>15 Nov 2023 - SEMI FINAL 1</span>
+                                <span>Mumbai</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">India</span><span class="team-score">397/4 (50)</span></div>
+                            <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">327 (48.5)</span></div>
+                            <div class="match-outcome">India beat New Zealand by 70 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">India produced a statement performance, overpowering New Zealand with explosive batting and incisive bowling.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Mohammed Shami</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">India</span><span class="team-score">397/4 (50)</span></div>
-                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">327 (48.5)</span></div>
-                    <div class="match-outcome">India beat New Zealand by 70 runs</div>
                 </div>
 
-                <div class="match-card" data-index="45">
-                    <div class="match-meta">
-                        <span>12 Nov 2023 - MATCH 45</span>
-                        <span>Bengaluru</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="45">
+                            <div class="match-meta">
+                                <span>12 Nov 2023 - MATCH 45</span>
+                                <span>Bengaluru</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">India</span><span class="team-score">410/4 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">250 (47.5)</span></div>
+                            <div class="match-outcome">India beat Netherlands by 160 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">India posted a massive total and backed it up with disciplined bowling to seal a dominant victory.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Shreyas Iyer</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">India</span><span class="team-score">410/4 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">250 (47.5)</span></div>
-                    <div class="match-outcome">India beat Netherlands by 160 runs</div>
                 </div>
 
-                <div class="match-card" data-index="44">
-                    <div class="match-meta">
-                        <span>11 Nov 2023 - MATCH 44</span>
-                        <span>Kolkata</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="44">
+                            <div class="match-meta">
+                                <span>11 Nov 2023 - MATCH 44</span>
+                                <span>Kolkata</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">England</span><span class="team-score">337/9 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">244 (43.3)</span></div>
+                            <div class="match-outcome">England beat Pakistan by 93 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">England ended their campaign on a high, dominating Pakistan with a commanding batting performance.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Ben Stokes</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">England</span><span class="team-score">337/9 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">244 (43.3)</span></div>
-                    <div class="match-outcome">England beat Pakistan by 93 runs</div>
                 </div>
 
-                <div class="match-card" data-index="43">
-                    <div class="match-meta">
-                        <span>11 Nov 2023 - MATCH 43</span>
-                        <span>Pune</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="43">
+                            <div class="match-meta">
+                                <span>11 Nov 2023 - MATCH 43</span>
+                                <span>Pune</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Australia</span><span class="team-score">307/2 (44.4)</span></div>
+                            <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">306/8 (50)</span></div>
+                            <div class="match-outcome">Australia beat Bangladesh by 8 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Australia chased aggressively, overpowering Bangladesh’s bowling attack with authority.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Mitchell Marsh</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">307/2 (44.4)</span></div>
-                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">306/8 (50)</span></div>
-                    <div class="match-outcome">Australia beat Bangladesh by 8 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="42">
-                    <div class="match-meta">
-                        <span>10 Nov 2023 - MATCH 42</span>
-                        <span>Ahmedabad</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="42">
+                            <div class="match-meta">
+                                <span>10 Nov 2023 - MATCH 42</span>
+                                <span>Ahmedabad</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">247/5 (47.3)</span></div>
+                            <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">244 (50)</span></div>
+                            <div class="match-outcome">South Africa beat Afghanistan by 5 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">South Africa held their nerve in a tight chase, edging past Afghanistan in a closely fought contest.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Gerald Coetzee</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">247/5 (47.3)</span></div>
-                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">244 (50)</span></div>
-                    <div class="match-outcome">South Africa beat Afghanistan by 5 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="41">
-                    <div class="match-meta">
-                        <span>09 Nov 2023 - MATCH 41</span>
-                        <span>Bengaluru</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="41">
+                            <div class="match-meta">
+                                <span>09 Nov 2023 - MATCH 41</span>
+                                <span>Bengaluru</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">172/5 (23.2)</span></div>
+                            <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">171 (46.4)</span></div>
+                            <div class="match-outcome">New Zealand beat Sri Lanka by 5 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">New Zealand chased steadily, responding calmly to Sri Lanka’s bowling to close out the match.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Rachin Ravindra</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">172/5 (23.2)</span></div>
-                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">171 (46.4)</span></div>
-                    <div class="match-outcome">New Zealand beat Sri Lanka by 5 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="40">
-                    <div class="match-meta">
-                        <span>08 Nov 2023 - MATCH 40</span>
-                        <span>Pune</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="40">
+                            <div class="match-meta">
+                                <span>08 Nov 2023 - MATCH 40</span>
+                                <span>Pune</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">England</span><span class="team-score">339/9 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">179 (37.2)</span></div>
+                            <div class="match-outcome">England beat Netherlands by 160 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">England finished strongly in the tournament, dominating with bat and ball to secure a comprehensive victory.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Dawid Malan</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">England</span><span class="team-score">339/9 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">179 (37.2)</span></div>
-                    <div class="match-outcome">England beat Netherlands by 160 runs</div>
                 </div>
 
-                <div class="match-card" data-index="39">
-                    <div class="match-meta">
-                        <span>07 Nov 2023 - MATCH 39</span>
-                        <span>Mumbai</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="39">
+                            <div class="match-meta">
+                                <span>07 Nov 2023 - MATCH 39</span>
+                                <span>Mumbai</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Australia</span><span class="team-score">293/7 (46.5)</span></div>
+                            <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">291/5 (50)</span></div>
+                            <div class="match-outcome">Australia beat Afghanistan by 3 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Glenn Maxwell played one of the greatest ODI innings, rescuing Australia from collapse to an unforgettable win.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Glenn Maxwell</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">293/7 (46.5)</span></div>
-                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">291/5 (50)</span></div>
-                    <div class="match-outcome">Australia beat Afghanistan by 3 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="38">
-                    <div class="match-meta">
-                        <span>06 Nov 2023 - MATCH 38</span>
-                        <span>Delhi</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="38">
+                            <div class="match-meta">
+                                <span>06 Nov 2023 - MATCH 38</span>
+                                <span>Delhi</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">282/7 (41.1)</span></div>
+                            <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">279 (49.3)</span></div>
+                            <div class="match-outcome">Bangladesh beat Sri Lanka by 3 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Bangladesh chased confidently after early setbacks, maintaining control to secure a narrow victory.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Najmul Hossain Shanto</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">282/7 (41.1)</span></div>
-                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">279 (49.3)</span></div>
-                    <div class="match-outcome">Bangladesh beat Sri Lanka by 3 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="37">
-                    <div class="match-meta">
-                        <span>05 Nov 2023 - MATCH 37</span>
-                        <span>Kolkata</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="37">
+                            <div class="match-meta">
+                                <span>05 Nov 2023 - MATCH 37</span>
+                                <span>Kolkata</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">India</span><span class="team-score">326/5 (50)</span></div>
+                            <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">83 (27.1)</span></div>
+                            <div class="match-outcome">India beat South Africa by 243 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">India produced a near-perfect performance, dismantling South Africa with pace, bounce, and batting depth.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Virat Kohli</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">India</span><span class="team-score">326/5 (50)</span></div>
-                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">83 (27.1)</span></div>
-                    <div class="match-outcome">India beat South Africa by 243 runs</div>
                 </div>
 
-                <div class="match-card" data-index="36">
-                    <div class="match-meta">
-                        <span>04 Nov 2023 - MATCH 36</span>
-                        <span>Ahmedabad</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="36">
+                            <div class="match-meta">
+                                <span>04 Nov 2023 - MATCH 36</span>
+                                <span>Ahmedabad</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">England</span><span class="team-score">253 (48.1)</span></div>
+                            <div class="team-row"><span class="team-name">Australia</span><span class="team-score">286 (49.3)</span></div>
+                            <div class="match-outcome">Australia beat England by 33 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Australia’s bowling attack strangled England after a strong batting effort secured a vital win.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Adam Zampa</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">England</span><span class="team-score">253 (48.1)</span></div>
-                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">286 (49.3)</span></div>
-                    <div class="match-outcome">Australia beat England by 33 runs</div>
                 </div>
 
-                <div class="match-card" data-index="35">
-                    <div class="match-meta">
-                        <span>04 Nov 2023 - MATCH 35</span>
-                        <span>Bengaluru</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="35">
+                            <div class="match-meta">
+                                <span>04 Nov 2023 - MATCH 35</span>
+                                <span>Bengaluru</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">401/6 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">200/1 (25.3)</span></div>
+                            <div class="match-outcome">Pakistan beat New Zealand by 21 runs (D/L)</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Rain played its part, but Pakistan held their nerve under the DLS method to edge out New Zealand.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Daryl Mitchell</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">401/6 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">200/1 (25.3)</span></div>
-                    <div class="match-outcome">Pakistan beat New Zealand by 21 runs (D/L)</div>
                 </div>
 
-                <div class="match-card" data-index="34">
-                    <div class="match-meta">
-                        <span>03 Nov 2023 - MATCH 34</span>
-                        <span>Lucknow</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="34">
+                            <div class="match-meta">
+                                <span>03 Nov 2023 - MATCH 34</span>
+                                <span>Lucknow</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">179 (46.3)</span></div>
+                            <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">181/3 (31.3)</span></div>
+                            <div class="match-outcome">Afghanistan beat Netherlands by 7 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Afghanistan chased efficiently after disciplined bowling, keeping control throughout the match.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Rahmat Shah</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">179 (46.3)</span></div>
-                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">181/3 (31.3)</span></div>
-                    <div class="match-outcome">Afghanistan beat Netherlands by 7 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="33">
-                    <div class="match-meta">
-                        <span>02 Nov 2023 - MATCH 33</span>
-                        <span>Mumbai</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="33">
+                            <div class="match-meta">
+                                <span>02 Nov 2023 - MATCH 33</span>
+                                <span>Mumbai</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">India</span><span class="team-score">357/8 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">55 (19.4)</span></div>
+                            <div class="match-outcome">India beat Sri Lanka by 302 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">India delivered a crushing victory with a massive total and relentless bowling that dismantled Sri Lanka.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Mohammed Shami</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">India</span><span class="team-score">357/8 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">55 (19.4)</span></div>
-                    <div class="match-outcome">India beat Sri Lanka by 302 runs</div>
                 </div>
 
-                <div class="match-card" data-index="32">
-                    <div class="match-meta">
-                        <span>01 Nov 2023 - MATCH 32</span>
-                        <span>Pune</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="32">
+                            <div class="match-meta">
+                                <span>01 Nov 2023 - MATCH 32</span>
+                                <span>Pune</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">167 (35.3)</span></div>
+                            <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">357/4 (50)</span></div>
+                            <div class="match-outcome">South Africa beat New Zealand by 190 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">South Africa dominated with explosive batting and ruthless bowling, completely overwhelming New Zealand.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Rassie van der Dussen</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">167 (35.3)</span></div>
-                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">357/4 (50)</span></div>
-                    <div class="match-outcome">South Africa beat New Zealand by 190 runs</div>
                 </div>
 
-                <div class="match-card" data-index="31">
-                    <div class="match-meta">
-                        <span>31 Oct 2023 - MATCH 31</span>
-                        <span>Kolkata</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="31">
+                            <div class="match-meta">
+                                <span>31 Oct 2023 - MATCH 31</span>
+                                <span>Kolkata</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">205/3 (32.3)</span></div>
+                            <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">204 (45.1)</span></div>
+                            <div class="match-outcome">Pakistan beat Bangladesh by 7 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Pakistan controlled the chase from the start, with a composed batting display sealing a comfortable win.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Fakhar Zaman</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">205/3 (32.3)</span></div>
-                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">204 (45.1)</span></div>
-                    <div class="match-outcome">Pakistan beat Bangladesh by 7 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="30">
-                    <div class="match-meta">
-                        <span>30 Oct 2023 - MATCH 30</span>
-                        <span>Pune</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="30">
+                            <div class="match-meta">
+                                <span>30 Oct 2023 - MATCH 30</span>
+                                <span>Pune</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">242/3 (45.2)</span></div>
+                            <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">241 (49.3)</span></div>
+                            <div class="match-outcome">Afghanistan beat Sri Lanka by 7 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Afghanistan chased calmly, executing their plans perfectly to register another crucial tournament victory.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Azmatullah Omarzai</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">242/3 (45.2)</span></div>
-                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">241 (49.3)</span></div>
-                    <div class="match-outcome">Afghanistan beat Sri Lanka by 7 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="29">
-                    <div class="match-meta">
-                        <span>29 Oct 2023 - MATCH 29</span>
-                        <span>Lucknow</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="29">
+                            <div class="match-meta">
+                                <span>29 Oct 2023 - MATCH 29</span>
+                                <span>Lucknow</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">India</span><span class="team-score">229/9 (50)</span></div>
+                            <div class="team-row"><span class="team-name">England</span><span class="team-score">129 (34.5)</span></div>
+                            <div class="match-outcome">India beat England by 100 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">India’s bowlers dismantled England before a controlled chase wrapped up a dominant all-round performance.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Rohit Sharma</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">India</span><span class="team-score">229/9 (50)</span></div>
-                    <div class="team-row"><span class="team-name">England</span><span class="team-score">129 (34.5)</span></div>
-                    <div class="match-outcome">India beat England by 100 runs</div>
                 </div>
 
-                <div class="match-card" data-index="28">
-                    <div class="match-meta">
-                        <span>28 Oct 2023 - MATCH 28</span>
-                        <span>Kolkata</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="28">
+                            <div class="match-meta">
+                                <span>28 Oct 2023 - MATCH 28</span>
+                                <span>Kolkata</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">229 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">142 (42.2)</span></div>
+                            <div class="match-outcome">Netherlands beat Bangladesh by 87 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">The Netherlands delivered a disciplined bowling performance and controlled the chase to secure a convincing win.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Bas de Leede</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">229 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">142 (42.2)</span></div>
-                    <div class="match-outcome">Netherlands beat Bangladesh by 87 runs</div>
                 </div>
 
-                <div class="match-card" data-index="27">
-                    <div class="match-meta">
-                        <span>28 Oct 2023 - MATCH 27</span>
-                        <span>Dharamsala</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="27">
+                            <div class="match-meta">
+                                <span>28 Oct 2023 - MATCH 27</span>
+                                <span>Dharamsala</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Australia</span><span class="team-score">388 (49.2)</span></div>
+                            <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">383/9 (50)</span></div>
+                            <div class="match-outcome">Australia beat New Zealand by 5 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">A classic World Cup thriller saw Australia defend a huge total, surviving a late onslaught from New Zealand.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Travis Head</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">388 (49.2)</span></div>
-                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">383/9 (50)</span></div>
-                    <div class="match-outcome">Australia beat New Zealand by 5 runs</div>
                 </div>
 
-                <div class="match-card" data-index="26">
-                    <div class="match-meta">
-                        <span>27 Oct 2023 - MATCH 26</span>
-                        <span>Chennai</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="26">
+                            <div class="match-meta">
+                                <span>27 Oct 2023 - MATCH 26</span>
+                                <span>Chennai</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">270 (46.4)</span></div>
+                            <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">271/9 (47.2)</span></div>
+                            <div class="match-outcome">South Africa beat Pakistan by 1 wicket</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">A tense low-margin contest saw South Africa edge past Pakistan, holding their nerve in the final overs.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Tabraiz Shamsi</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">270 (46.4)</span></div>
-                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">271/9 (47.2)</span></div>
-                    <div class="match-outcome">South Africa beat Pakistan by 1 wicket</div>
                 </div>
 
-                <div class="match-card" data-index="25">
-                    <div class="match-meta">
-                        <span>26 Oct 2023 - MATCH 25</span>
-                        <span>Bengaluru</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="25">
+                            <div class="match-meta">
+                                <span>26 Oct 2023 - MATCH 25</span>
+                                <span>Bengaluru</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">England</span><span class="team-score">156 (33.2)</span></div>
+                            <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">160/2 (25.4)</span></div>
+                            <div class="match-outcome">Sri Lanka beat England by 8 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Sri Lanka chased clinically, capitalizing on England’s bowling struggles and finishing the game with ease.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Pathum Nissanka</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">England</span><span class="team-score">156 (33.2)</span></div>
-                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">160/2 (25.4)</span></div>
-                    <div class="match-outcome">Sri Lanka beat England by 8 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="24">
-                    <div class="match-meta">
-                        <span>25 Oct 2023 - MATCH 24</span>
-                        <span>Delhi</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="24">
+                            <div class="match-meta">
+                                <span>25 Oct 2023 - MATCH 24</span>
+                                <span>Delhi</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Australia</span><span class="team-score">399/8 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">90 (21)</span></div>
+                            <div class="match-outcome">Australia beat Netherlands by 309 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Australia unleashed a batting onslaught, posting a mammoth total before demolishing the Dutch batting lineup.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Glenn Maxwell</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">399/8 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">90 (21)</span></div>
-                    <div class="match-outcome">Australia beat Netherlands by 309 runs</div>
                 </div>
 
-                <div class="match-card" data-index="23">
-                    <div class="match-meta">
-                        <span>24 Oct 2023 - MATCH 23</span>
-                        <span>Mumbai</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="23">
+                            <div class="match-meta">
+                                <span>24 Oct 2023 - MATCH 23</span>
+                                <span>Mumbai</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">382/5 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">233 (46.4)</span></div>
+                            <div class="match-outcome">South Africa beat Bangladesh by 149 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">South Africa’s batting firepower overwhelmed Bangladesh, followed by precise bowling to secure a dominant victory.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Quinton de Kock</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">382/5 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">233 (46.4)</span></div>
-                    <div class="match-outcome">South Africa beat Bangladesh by 149 runs</div>
                 </div>
 
-                <div class="match-card" data-index="22">
-                    <div class="match-meta">
-                        <span>23 Oct 2023 - MATCH 22</span>
-                        <span>Chennai</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="22">
+                            <div class="match-meta">
+                                <span>23 Oct 2023 - MATCH 22</span>
+                                <span>Chennai</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">282/7 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">286/2 (49)</span></div>
+                            <div class="match-outcome">Afghanistan beat Pakistan by 8 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Afghanistan stunned Pakistan with fearless batting and disciplined bowling, sealing one of the tournament’s biggest upsets.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Ibrahim Zadran</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">282/7 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">286/2 (49)</span></div>
-                    <div class="match-outcome">Afghanistan beat Pakistan by 8 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="21">
-                    <div class="match-meta">
-                        <span>22 Oct 2023 - MATCH 21</span>
-                        <span>Dharamsala</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="21">
+                            <div class="match-meta">
+                                <span>22 Oct 2023 - MATCH 21</span>
+                                <span>Dharamsala</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">India</span><span class="team-score">274/6 (48)</span></div>
+                            <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">273 (50)</span></div>
+                            <div class="match-outcome">India beat New Zealand by 4 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">India survived a tense chase as early breakthroughs tested their resolve, before a composed finish sealed the win.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Mohammed Shami</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">India</span><span class="team-score">274/6 (48)</span></div>
-                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">273 (50)</span></div>
-                    <div class="match-outcome">India beat New Zealand by 4 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="20">
-                    <div class="match-meta">
-                        <span>21 Oct 2023 - MATCH 20</span>
-                        <span>Mumbai</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="20">
+                            <div class="match-meta">
+                                <span>21 Oct 2023 - MATCH 20</span>
+                                <span>Mumbai</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">England</span><span class="team-score">170 (22)</span></div>
+                            <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">399/7 (50)</span></div>
+                            <div class="match-outcome">South Africa beat England by 229 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">South Africa delivered a ruthless performance, dominating England with explosive batting and relentless bowling pressure.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Heinrich Klaasen</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">England</span><span class="team-score">170 (22)</span></div>
-                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">399/7 (50)</span></div>
-                    <div class="match-outcome">South Africa beat England by 229 runs</div>
                 </div>
 
-                <div class="match-card" data-index="19">
-                    <div class="match-meta">
-                        <span>21 Oct 2023 - MATCH 19</span>
-                        <span>Lucknow</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="19">
+                            <div class="match-meta">
+                                <span>21 Oct 2023 - MATCH 19</span>
+                                <span>Lucknow</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">262 (49.4)</span></div>
+                            <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">263/5 (48.2)</span></div>
+                            <div class="match-outcome">Sri Lanka beat Netherlands by 5 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Sri Lanka chased confidently after early setbacks, maintaining composure to edge past the Netherlands in a tight contest.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Sadeera Samarawickrama</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">262 (49.4)</span></div>
-                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">263/5 (48.2)</span></div>
-                    <div class="match-outcome">Sri Lanka beat Netherlands by 5 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="18">
-                    <div class="match-meta">
-                        <span>20 Oct 2023 - MATCH 18</span>
-                        <span>Bengaluru</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="18">
+                            <div class="match-meta">
+                                <span>20 Oct 2023 - MATCH 18</span>
+                                <span>Bengaluru</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Australia</span><span class="team-score">367/9 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">305 (45.3)</span></div>
+                            <div class="match-outcome">Australia beat Pakistan by 62 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Australia’s aggressive batting set the tone, while disciplined bowling ensured Pakistan never fully threatened the target.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">David Warner</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">367/9 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">305 (45.3)</span></div>
-                    <div class="match-outcome">Australia beat Pakistan by 62 runs</div>
                 </div>
 
-                <div class="match-card" data-index="17">
-                    <div class="match-meta">
-                        <span>19 Oct 2023 - MATCH 17</span>
-                        <span>Pune</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="17">
+                            <div class="match-meta">
+                                <span>19 Oct 2023 - MATCH 17</span>
+                                <span>Pune</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">India</span><span class="team-score">261/3 (41.3)</span></div>
+                            <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">256/8 (50)</span></div>
+                            <div class="match-outcome">India beat Bangladesh by 7 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">India paced the chase perfectly after Bangladesh’s competitive score, finishing the game without allowing momentum to shift.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Shubman Gill</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">India</span><span class="team-score">261/3 (41.3)</span></div>
-                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">256/8 (50)</span></div>
-                    <div class="match-outcome">India beat Bangladesh by 7 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="16">
-                    <div class="match-meta">
-                        <span>18 Oct 2023 - MATCH 16</span>
-                        <span>Chennai</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="16">
+                            <div class="match-meta">
+                                <span>18 Oct 2023 - MATCH 16</span>
+                                <span>Chennai</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">288/6 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">139 (34.4)</span></div>
+                            <div class="match-outcome">New Zealand beat Afghanistan by 149 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">New Zealand’s bowlers dominated from the start, restricting Afghanistan before a smooth and calculated chase.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Mitchell Santner</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">288/6 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">139 (34.4)</span></div>
-                    <div class="match-outcome">New Zealand beat Afghanistan by 149 runs</div>
                 </div>
 
-                <div class="match-card" data-index="15">
-                    <div class="match-meta">
-                        <span>17 Oct 2023 - MATCH 15</span>
-                        <span>Dharamsala</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="15">
+                            <div class="match-meta">
+                                <span>17 Oct 2023 - MATCH 15</span>
+                                <span>Dharamsala</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">207 (42.5)</span></div>
+                            <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">245/8 (43)</span></div>
+                            <div class="match-outcome">Netherlands beat South Africa by 38 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">The Netherlands shocked South Africa with a spirited all-round display, defending their total through tight bowling and sharp fielding.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Scott Edwards</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">207 (42.5)</span></div>
-                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">245/8 (43)</span></div>
-                    <div class="match-outcome">Netherlands beat South Africa by 38 runs</div>
                 </div>
 
-                <div class="match-card" data-index="14">
-                    <div class="match-meta">
-                        <span>16 Oct 2023 - MATCH 14</span>
-                        <span>Lucknow</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="14">
+                            <div class="match-meta">
+                                <span>16 Oct 2023 - MATCH 14</span>
+                                <span>Lucknow</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Australia</span><span class="team-score">215/5 (35.2)</span></div>
+                            <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">209 (43.3)</span></div>
+                            <div class="match-outcome">Australia beat Sri Lanka by 5 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Australia absorbed early pressure before executing a controlled chase, gradually breaking Sri Lanka’s resistance.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Adam Zampa</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">215/5 (35.2)</span></div>
-                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">209 (43.3)</span></div>
-                    <div class="match-outcome">Australia beat Sri Lanka by 5 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="13">
-                    <div class="match-meta">
-                        <span>15 Oct 2023 - MATCH 13</span>
-                        <span>Delhi</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="13">
+                            <div class="match-meta">
+                                <span>15 Oct 2023 - MATCH 13</span>
+                                <span>Delhi</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">England</span><span class="team-score">215 (40.3)</span></div>
+                            <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">284 (49.5)</span></div>
+                            <div class="match-outcome">Afghanistan beat England by 69 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Afghanistan produced a historic upset with disciplined bowling and fearless batting, stunning England in a landmark victory.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Mujeeb Ur Rahman</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">England</span><span class="team-score">215 (40.3)</span></div>
-                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">284 (49.5)</span></div>
-                    <div class="match-outcome">Afghanistan beat England by 69 runs</div>
                 </div>
 
-                <div class="match-card" data-index="12">
-                    <div class="match-meta">
-                        <span>14 Oct 2023 - MATCH 12</span>
-                        <span>Ahmedabad</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="12">
+                            <div class="match-meta">
+                                <span>14 Oct 2023 - MATCH 12</span>
+                                <span>Ahmedabad</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">India</span><span class="team-score">192/3 (30.3)</span></div>
+                            <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">191 (42.5)</span></div>
+                            <div class="match-outcome">India beat Pakistan by 7 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">India delivered a commanding all-round performance, chasing down Pakistan’s total with authority in front of a packed crowd.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Rohit Sharma</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">India</span><span class="team-score">192/3 (30.3)</span></div>
-                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">191 (42.5)</span></div>
-                    <div class="match-outcome">India beat Pakistan by 7 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="11">
-                    <div class="match-meta">
-                        <span>13 Oct 2023 - MATCH 11</span>
-                        <span>Chennai</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="11">
+                            <div class="match-meta">
+                                <span>13 Oct 2023 - MATCH 11</span>
+                                <span>Chennai</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">248/2 (42.5)</span></div>
+                            <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">245/9 (50)</span></div>
+                            <div class="match-outcome">New Zealand beat Bangladesh by 8 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">New Zealand maintained control throughout the chase, responding calmly to Bangladesh’s resistance and closing the game comfortably.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Rachin Ravindra</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">248/2 (42.5)</span></div>
-                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">245/9 (50)</span></div>
-                    <div class="match-outcome">New Zealand beat Bangladesh by 8 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="10">
-                    <div class="match-meta">
-                        <span>12 Oct 2023 - MATCH 10</span>
-                        <span>Lucknow</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="10">
+                            <div class="match-meta">
+                                <span>12 Oct 2023 - MATCH 10</span>
+                                <span>Lucknow</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Australia</span><span class="team-score">177 (40.5)</span></div>
+                            <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">311/7 (50)</span></div>
+                            <div class="match-outcome">South Africa beat Australia by 134 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">South Africa dominated with both bat and ball, exploiting Australia’s bowling and collapsing their batting order convincingly.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Kagiso Rabada</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">177 (40.5)</span></div>
-                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">311/7 (50)</span></div>
-                    <div class="match-outcome">South Africa beat Australia by 134 runs</div>
                 </div>
 
-                <div class="match-card" data-index="9">
-                    <div class="match-meta">
-                        <span>11 Oct 2023 - MATCH 9</span>
-                        <span>Delhi</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="9">
+                            <div class="match-meta">
+                                <span>11 Oct 2023 - MATCH 9</span>
+                                <span>Delhi</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">India</span><span class="team-score">273/2 (35)</span></div>
+                            <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">272/8 (50)</span></div>
+                            <div class="match-outcome">India beat Afghanistan by 8 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">India chased efficiently after Afghanistan’s competitive total, with controlled batting ensuring no late drama in the run chase.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Jasprit Bumrah</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">India</span><span class="team-score">273/2 (35)</span></div>
-                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">272/8 (50)</span></div>
-                    <div class="match-outcome">India beat Afghanistan by 8 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="8">
-                    <div class="match-meta">
-                        <span>10 Oct 2023 - MATCH 8</span>
-                        <span>Hyderabad</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="8">
+                            <div class="match-meta">
+                                <span>10 Oct 2023 - MATCH 8</span>
+                                <span>Hyderabad</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">345/4 (48.2)</span></div>
+                            <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">344/9 (50)</span></div>
+                            <div class="match-outcome">Pakistan beat Sri Lanka by 6 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">A high-scoring thriller saw Pakistan chase down a daunting target with composure, thanks to a sensational partnership under pressure.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Mohammad Rizwan</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">345/4 (48.2)</span></div>
-                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">344/9 (50)</span></div>
-                    <div class="match-outcome">Pakistan beat Sri Lanka by 6 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="7">
-                    <div class="match-meta">
-                        <span>10 Oct 2023 - MATCH 7</span>
-                        <span>Dharamsala</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="7">
+                            <div class="match-meta">
+                                <span>10 Oct 2023 - MATCH 7</span>
+                                <span>Dharamsala</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">England</span><span class="team-score">364/9 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">227 (48.2)</span></div>
+                            <div class="match-outcome">England beat Bangladesh by 137 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">England’s aggressive batting proved too strong as they posted a massive total, followed by incisive bowling to crush Bangladesh.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Dawid Malan</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">England</span><span class="team-score">364/9 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">227 (48.2)</span></div>
-                    <div class="match-outcome">England beat Bangladesh by 137 runs</div>
                 </div>
 
-                <div class="match-card" data-index="6">
-                    <div class="match-meta">
-                        <span>09 Oct 2023 - MATCH 6</span>
-                        <span>Hyderabad</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="6">
+                            <div class="match-meta">
+                                <span>09 Oct 2023 - MATCH 6</span>
+                                <span>Hyderabad</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">322/7 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">223 (46.3)</span></div>
+                            <div class="match-outcome">New Zealand beat Netherlands by 99 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">New Zealand’s top order laid a solid foundation before the bowlers dismantled the Dutch lineup, ensuring a comfortable win.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Will Young</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">322/7 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">223 (46.3)</span></div>
-                    <div class="match-outcome">New Zealand beat Netherlands by 99 runs</div>
                 </div>
 
-                <div class="match-card" data-index="5">
-                    <div class="match-meta">
-                        <span>08 Oct 2023 - MATCH 5</span>
-                        <span>Chennai</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="5">
+                            <div class="match-meta">
+                                <span>08 Oct 2023 - MATCH 5</span>
+                                <span>Chennai</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">India</span><span class="team-score">201/4 (41.2)</span></div>
+                            <div class="team-row"><span class="team-name">Australia</span><span class="team-score">199 (49.3)</span></div>
+                            <div class="match-outcome">India beat Australia by 6 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">India held their nerve in a tense chase after early wickets, with a calm middle-order recovery guiding them home against Australia.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">KL Rahul</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">India</span><span class="team-score">201/4 (41.2)</span></div>
-                    <div class="team-row"><span class="team-name">Australia</span><span class="team-score">199 (49.3)</span></div>
-                    <div class="match-outcome">India beat Australia by 6 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="4">
-                    <div class="match-meta">
-                        <span>07 Oct 2023 - MATCH 4</span>
-                        <span>Delhi</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="4">
+                            <div class="match-meta">
+                                <span>07 Oct 2023 - MATCH 4</span>
+                                <span>Delhi</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">428/5 (50)</span></div>
+                            <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">326 (44.5)</span></div>
+                            <div class="match-outcome">South Africa beat Sri Lanka by 102 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">South Africa unleashed a record-breaking batting performance, completely overpowering Sri Lanka. Their bowling attack sealed a dominant victory.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Aiden Markram</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">South Africa</span><span class="team-score">428/5 (50)</span></div>
-                    <div class="team-row"><span class="team-name">Sri Lanka</span><span class="team-score">326 (44.5)</span></div>
-                    <div class="match-outcome">South Africa beat Sri Lanka by 102 runs</div>
                 </div>
 
-                <div class="match-card" data-index="3">
-                    <div class="match-meta">
-                        <span>07 Oct 2023 - MATCH 3</span>
-                        <span>Dharamsala</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="3">
+                            <div class="match-meta">
+                                <span>07 Oct 2023 - MATCH 3</span>
+                                <span>Dharamsala</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">158/4 (34.4)</span></div>
+                            <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">156 (37.2)</span></div>
+                            <div class="match-outcome">Bangladesh beat Afghanistan by 6 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Bangladesh recovered well after early setbacks and chased efficiently, controlling the run rate and capitalizing on Afghanistan’s batting collapse.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Mehidy Hasan Miraz</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Bangladesh</span><span class="team-score">158/4 (34.4)</span></div>
-                    <div class="team-row"><span class="team-name">Afghanistan</span><span class="team-score">156 (37.2)</span></div>
-                    <div class="match-outcome">Bangladesh beat Afghanistan by 6 wickets</div>
                 </div>
 
-                <div class="match-card" data-index="2">
-                    <div class="match-meta">
-                        <span>06 Oct 2023 - MATCH 2</span>
-                        <span>Hyderabad</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="2">
+                            <div class="match-meta">
+                                <span>06 Oct 2023 - MATCH 2</span>
+                                <span>Hyderabad</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">286 (49)</span></div>
+                            <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">205 (41)</span></div>
+                            <div class="match-outcome">Pakistan beat Netherlands by 81 runs</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">Pakistan posted a competitive total and backed it up with disciplined bowling to restrict the Netherlands. The Dutch fought but never fully threatened the chase.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Saud Shakeel</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">Pakistan</span><span class="team-score">286 (49)</span></div>
-                    <div class="team-row"><span class="team-name">Netherlands</span><span class="team-score">205 (41)</span></div>
-                    <div class="match-outcome">Pakistan beat Netherlands by 81 runs</div>
                 </div>
 
-                <div class="match-card" data-index="1">
-                    <div class="match-meta">
-                        <span>05 Oct 2023 - MATCH 1</span>
-                        <span>Ahmedabad</span>
+                <div class="match-card">
+                    <div class="match-card-inner">
+                        <div class="match-card-front" data-index="1">
+                            <div class="match-meta">
+                                <span>05 Oct 2023 - MATCH 1</span>
+                                <span>Ahmedabad</span>
+                            </div>
+                            <div class="team-row"><span class="team-name">England</span><span class="team-score">282/9 (50)</span></div>
+                            <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">283/1 (36.2)</span></div>
+                            <div class="match-outcome">New Zealand beat England by 9 wickets</div>
+                        </div>
+                        <div class="match-card-back">
+                            <p class="summary-text">New Zealand dominated the opening match with a clinical chase, comfortably hunting down England’s total without losing control at any stage. Their batting depth set the tone for the tournament.</p>
+                            <p class="motm-text">Man of the Match: <span class="motm-name">Devon Conway</span></p>
+                        </div>
                     </div>
-                    <div class="team-row"><span class="team-name">England</span><span class="team-score">282/9 (50)</span></div>
-                    <div class="team-row"><span class="team-name">New Zealand</span><span class="team-score">283/1 (36.2)</span></div>
-                    <div class="match-outcome">New Zealand beat England by 9 wickets</div>
                 </div>
 
             </div>
