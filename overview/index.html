@@ -239,10 +239,13 @@
         }
 
         .teams-section li:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: var(--glow-shadow);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            /* Increased translate and scale for a more pronounced pop */
+            transform: translateY(-10px) scale(1.08); 
+            border-color: rgba(255, 255, 255, 0.3);
+            /* Stronger shadow for greater depth */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 210, 255, 0.3);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 100%);
+            z-index: 2;
         }
 
         .team-title {
@@ -342,11 +345,16 @@
         }
 
         .match-card:hover {
-            transform: translateX(5px);
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
-            border-color: rgba(255, 255, 255, 0.15);
+            /* Changed to match teams-section hover effect */
+            transform: translateY(-10px) scale(1.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            /* Stronger shadow from teams section */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 210, 255, 0.3);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 100%);
+            z-index: 2;
+            
+            /* Maintaining match-card specific border color logic */
             border-left-color: var(--accent-color);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
 
         .match-card::after {
@@ -481,35 +489,35 @@
                 </li>
                 <li>
                     <div class="team-title">Bangladesh</div>
-                    <div class="squad-text">Shakib Al Hasan, Najmul Hossain Shanto, Litton Das, Tanzid Hasan Tamim, Towhid Hridoy, Mushfiqur Rahim, Mahmudullah Riyad, Mehidy Hasan Miraz, Mahedi Hasan, Mustafizur Rahman, Taskin Ahmed, Hasan Mahmud, Shoriful Islam, Nasum Ahmed, Tanzim Hasan Sakib.</div>
+                    <div class="squad-text">Shakib Al Hasan (Captain), Najmul Hossain Shanto, Litton Das, Tanzid Hasan Tamim, Towhid Hridoy, Mushfiqur Rahim, Mahmudullah Riyad, Mehidy Hasan Miraz, Mahedi Hasan, Mustafizur Rahman, Taskin Ahmed, Hasan Mahmud, Shoriful Islam, Nasum Ahmed, Tanzim Hasan Sakib.</div>
                 </li>
                 <li>
                     <div class="team-title">Australia</div>
-                    <div class="squad-text">Pat Cummins, Steve Smith, Alex Carey, Josh Inglis, Sean Abbott, Cameron Green, Josh Hazlewood, Travis Head, Marnus Labuschagne, Mitchell Marsh, Glenn Maxwell, Mitchell Starc, Marcus Stoinis, David Warner, Adam Zampa.</div>
+                    <div class="squad-text">Pat Cummins (Captain), Steve Smith, Alex Carey, Josh Inglis, Sean Abbott, Cameron Green, Josh Hazlewood, Travis Head, Marnus Labuschagne, Mitchell Marsh, Glenn Maxwell, Mitchell Starc, Marcus Stoinis, David Warner, Adam Zampa.</div>
                 </li>
                 <li>
                     <div class="team-title">Afghanistan</div>
-                    <div class="squad-text">Hashmatullah Shahidi, Rahmanullah Gurbaz, Ibrahim Zadran, Riaz Hassan, Rahmat Shah, Najibullah Zadran, Mohammad Nabi, Ikram Alikhil, Azmatullah Omarzai, Rashid Khan, Mujeeb ur Rahman, Noor Ahmad, Fazalhaq Farooqi, Abdul Rahman, Naveen-ul-Haq.</div>
+                    <div class="squad-text">Hashmatullah Shahidi (Captain), Rahmanullah Gurbaz, Ibrahim Zadran, Riaz Hassan, Rahmat Shah, Najibullah Zadran, Mohammad Nabi, Ikram Alikhil, Azmatullah Omarzai, Rashid Khan, Mujeeb ur Rahman, Noor Ahmad, Fazalhaq Farooqi, Abdul Rahman, Naveen-ul-Haq.</div>
                 </li>
                 <li>
                     <div class="team-title">Netherlands</div>
-                    <div class="squad-text">Scott Edwards, Max O'Dowd, Bas de Leede, Vikramjit Singh, Teja Nidamanuru, Paul van Meekeren, Colin Ackermann, Roelof van der Merwe, Logan van Beek, Aryan Dutt, Noah Croes, Wesley Barresi, Saqib Zulfiqar, Shariz Ahmad, Sybrand Engelbrecht.</div>
+                    <div class="squad-text">Scott Edwards (Captain), Max O'Dowd, Bas de Leede, Vikramjit Singh, Teja Nidamanuru, Paul van Meekeren, Colin Ackermann, Roelof van der Merwe, Logan van Beek, Aryan Dutt, Noah Croes, Wesley Barresi, Saqib Zulfiqar, Shariz Ahmad, Sybrand Engelbrecht.</div>
                 </li>
                 <li>
                     <div class="team-title">New Zealand</div>
-                    <div class="squad-text">Kane Williamson, Trent Boult, Mark Chapman, Devon Conway, Lockie Ferguson, Matt Henry, Tom Latham, Daryl Mitchell, Jimmy Neesham, Glenn Phillips, Rachin Ravindra, Mitchell Santner, Ish Sodhi, Tim Southee, Will Young.</div>
+                    <div class="squad-text">Kane Williamson (Captain), Trent Boult, Mark Chapman, Devon Conway, Lockie Ferguson, Matt Henry, Tom Latham, Daryl Mitchell, Jimmy Neesham, Glenn Phillips, Rachin Ravindra, Mitchell Santner, Ish Sodhi, Tim Southee, Will Young.</div>
                 </li>
                 <li>
                     <div class="team-title">Pakistan</div>
-                    <div class="squad-text">Babar Azam, Shadab Khan, Fakhar Zaman, Imam-ul-Haq, Abdullah Shafique, Mohammad Rizwan, Saud Shakeel, Iftikhar Ahmed, Salman Ali Agha, Mohammad Nawaz, Usama Mir, Shaheen Shah Afridi, Haris Rauf, Mohammad Wasim Jr, Hasan Ali.</div>
+                    <div class="squad-text">Babar Azam (Captain), Shadab Khan, Fakhar Zaman, Imam-ul-Haq, Abdullah Shafique, Mohammad Rizwan, Saud Shakeel, Iftikhar Ahmed, Salman Ali Agha, Mohammad Nawaz, Usama Mir, Shaheen Shah Afridi, Haris Rauf, Mohammad Wasim Jr, Hasan Ali.</div>
                 </li>
                 <li>
                     <div class="team-title">South Africa</div>
-                    <div class="squad-text">Temba Bavuma, Gerald Coetzee, Quinton de Kock, Reeza Hendricks, Marco Jansen, Heinrich Klaasen, Keshav Maharaj, Aiden Markram, David Miller, Lungi Ngidi, Andile Phehlukwayo, Kagiso Rabada, Tabraiz Shamsi, Rassie van der Dussen, Lizaad Williams.</div>
+                    <div class="squad-text">Temba Bavuma (Captain), Gerald Coetzee, Quinton de Kock, Reeza Hendricks, Marco Jansen, Heinrich Klaasen, Keshav Maharaj, Aiden Markram, David Miller, Lungi Ngidi, Andile Phehlukwayo, Kagiso Rabada, Tabraiz Shamsi, Rassie van der Dussen, Lizaad Williams.</div>
                 </li>
                 <li>
                     <div class="team-title">Sri Lanka</div>
-                    <div class="squad-text">Dasun Shanaka, Kusal Mendis, Kusal Perera, Pathum Nissanka, Dimuth Karunaratne, Sadeera Samarawickrama, Charith Asalanka, Dhananjaya de Silva, Dushan Hemantha, Maheesh Theekshana, Dunith Wellalage, Kasun Rajitha, Matheesha Pathirana, Lahiru Kumara, Dilshan Madushanka.</div>
+                    <div class="squad-text">Dasun Shanaka (Captain), Kusal Mendis, Kusal Perera, Pathum Nissanka, Dimuth Karunaratne, Sadeera Samarawickrama, Charith Asalanka, Dhananjaya de Silva, Dushan Hemantha, Maheesh Theekshana, Dunith Wellalage, Kasun Rajitha, Matheesha Pathirana, Lahiru Kumara, Dilshan Madushanka.</div>
                 </li>
             </ol>
         </section>
