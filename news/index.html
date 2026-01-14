@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICC: CWC 23 | News Archive</title>
     
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,6 +17,10 @@
             --card-bg: rgba(20, 20, 25, 0.4);
             --card-border: rgba(255, 255, 255, 0.06);
             --text-color: #ffffff;
+
+            /* Header Specific Variables (From Code 1) */
+            --glass: rgba(30,30,35,.55);
+            --border: rgba(255,255,255,.15);
 
             /* Luxury Accents */
             --accent-gradient: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
@@ -37,7 +42,6 @@
         }
 
         body {
-            /* CHANGED TO SORA */
             font-family: 'Sora', sans-serif;
             background-color: var(--bg-color);
             background-image: 
@@ -66,73 +70,103 @@
             z-index: 0;
         }
 
-        /* --- Header (Consistent with Overview) --- */
+        /* --- REPLACED HEADER STYLES (From Code 1) --- */
         header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 5%;
-            background: rgba(3, 3, 4, 0.85);
-            backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--card-border);
-            transition: all 0.3s ease;
-        }
-
-        .logo-container img {
-            height: 60px;
-            width: auto;
-            display: block;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.15));
-            margin: -5px 0;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 500;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 0.5rem 0;
-            position: relative;
-            transition: all 0.4s ease;
-            background: none;
-            border: none;
-            backdrop-filter: none;
-        }
-        
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
+            position: fixed;
+            top: 24px;
             left: 50%;
             transform: translateX(-50%);
-            width: 0%;
-            height: 2px;
-            background: var(--accent-gradient);
-            transition: width 0.4s ease;
-            box-shadow: 0 0 10px var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 18px 8px 24px;
+            min-width: 520px;
+            background: var(--glass);
+            backdrop-filter: blur(40px) saturate(180%);
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            z-index: 100;
+            transition: 
+                background 0.5s cubic-bezier(0.32, 0.72, 0, 1),
+                border-color 0.5s cubic-bezier(0.32, 0.72, 0, 1),
+                box-shadow 0.5s ease;
+            font-family: "Outfit", sans-serif; /* Explicitly set header font */
         }
 
-        .nav-link:hover { color: #fff; }
-        .nav-link:hover::after { width: 100%; }
+        header:hover {
+            background: rgba(40, 40, 45, 0.75);
+            border-color: rgba(255,255,255,0.25);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
 
-        .nav-link.active {
+        /* Logo */
+        .logo img {
+            height: 36px;
+            width: auto;
+            filter:
+                brightness(1.25)
+                contrast(1.3)
+                drop-shadow(0 0 12px rgba(80,180,255,.9))
+                drop-shadow(0 0 24px rgba(255,180,60,.6));
+            transition: transform .6s cubic-bezier(.16,1,.3,1), filter .4s ease;
+            display: block;
+        }
+        .logo img:hover {
+            transform: scale(1.1) rotate(-2deg);
+            filter:
+                brightness(1.4)
+                contrast(1.4)
+                drop-shadow(0 0 20px rgba(120,220,255,1))
+                drop-shadow(0 0 40px rgba(255,200,100,.9));
+        }
+
+        /* Nav */
+        nav ul {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0,0,0,.4);
+            padding: 5px;
+            border-radius: 100px;
+            transition: background 0.4s ease;
+        }
+        nav ul:hover {
+            background: rgba(0,0,0,.5);
+        }
+
+        .nav {
+            display: block;
+            padding: 10px 24px;
+            color: rgba(255,255,255,.6);
+            text-decoration: none;
+            font-size: .8rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            border-radius: 100px;
+            font-weight: 600;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            line-height: 1;
+        }
+
+        .nav:hover {
+            background: rgba(255,255,255,.2);
             color: #fff;
-            font-weight: 700;
-            text-shadow: 0 0 15px rgba(255,255,255,0.3);
+            box-shadow: 0 0 15px rgba(255,255,255,0.1);
         }
-        .nav-link.active::after { width: 30%; }
+
+        .nav:active {
+            transform: scale(0.96);
+        }
+        
+        /* Utility to keep active state visual from previous code if needed, adapted to new style */
+        .nav.active {
+            color: #fff;
+            background: rgba(255,255,255,.1);
+        }
 
         /* --- Main Layout --- */
         main {
@@ -140,7 +174,7 @@
             z-index: 5;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 80px 5%;
+            padding: 120px 5% 80px 5%; /* Increased top padding to accommodate fixed header */
             display: flex;
             flex-direction: column;
             gap: 100px;
@@ -330,11 +364,12 @@
 
         /* Media Queries */
         @media (max-width: 768px) {
+            header { min-width: 90%; padding: 8px 12px; }
             .hero-card { padding: 30px; }
             .hero-card h3 { font-size: 2.2rem; }
             h2 { font-size: 1.8rem; }
             .news-grid { grid-template-columns: 1fr; }
-            main { padding: 40px 5%; gap: 60px; }
+            main { padding: 100px 5% 40px; gap: 60px; }
         }
 
     </style>
@@ -345,15 +380,14 @@
     <div class="liquid-background-blob"></div>
 
     <header>
-        <div class="logo-container">
-            <img src="Gemini_Generated_Image_tue3kmtue3kmtue3.jpg" alt="ICC CWC 23">
+        <div class="logo">
+            <img src="Gemini_Generated_Image_tue3kmtue3kmtue3.jpg" alt="ICC CWC 23 Logo">
         </div>
-        
         <nav>
             <ul>
-                <li><a href="https://icc2023.vercel.app/" class="nav-link"><span>Home</span></a></li>
-                <li><a href="overview" class="nav-link"><span>Overview</span></a></li>
-                <li><a href="news" class="nav-link active"><span>News</span></a></li>
+                <li><a class="nav" href="https://icc2023.vercel.app/">Home</a></li>
+                <li><a class="nav" href="overview">Overview</a></li>
+                <li><a class="nav active" href="news">News</a></li>
             </ul>
         </nav>
     </header>
