@@ -335,6 +335,7 @@
             border: none;
             padding: 0;
             margin: 0;
+            cursor: pointer; /* Added cursor pointer to indicate clickability */
         }
 
         /* The Inner Wrapper - Performs the Rotation */
@@ -349,9 +350,9 @@
             border-radius: 12px;
         }
 
-        /* Trigger Flip on Hover */
-        .match-card:hover .match-card-inner {
-            transform: rotateY(180deg);
+        /* Trigger Flip on Click (via class) - CHANGED TO ROTATEX (VERTICAL) */
+        .match-card.flipped .match-card-inner {
+            transform: rotateX(180deg);
         }
 
         /* Additional Hover Lift on the container */
@@ -403,9 +404,9 @@
             font-style: italic;
         }
 
-        /* --- Back Face Styling (Summary) --- */
+        /* --- Back Face Styling (Summary) - CHANGED TO ROTATEX (VERTICAL) --- */
         .match-card-back {
-            transform: rotateY(180deg);
+            transform: rotateX(180deg);
             background: linear-gradient(135deg, rgba(20, 20, 25, 0.95) 0%, rgba(5, 5, 10, 0.98) 100%);
             border: 1px solid var(--accent-color);
             box-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
@@ -1499,7 +1500,7 @@
 
     <footer>
         <p>
-            &copy; 2023 ICC CWC Archive.
+            &copy; 2023 ICC CWC Archive. 
             <a href="tos">Terms & Conditions</a>
         </p>
     </footer>
@@ -1510,6 +1511,14 @@
             const y = e.clientY;
             document.documentElement.style.setProperty('--cursor-x', x + 'px');
             document.documentElement.style.setProperty('--cursor-y', y + 'px');
+        });
+
+        // Add flip functionality on click
+        const cards = document.querySelectorAll('.match-card');
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('flipped');
+            });
         });
     </script>
 
